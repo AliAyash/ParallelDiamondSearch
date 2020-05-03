@@ -5,7 +5,6 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 #include "inttypes.h"
-#include <mpi.h>
 
 //parameters to tune when experimenting with different blocks
 #define block_size 25
