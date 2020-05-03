@@ -192,7 +192,7 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
       printf("SDSP");
     }
     printf(" %d current center %d, %d\n", counter, relativeCurCenterBlockX, relativeCurCenterBlockY);
-    ans = (int *) malloc(2 * sizeof(int));
+    ans = (int *) malloc(3 * sizeof(int));
   }
   for (int i = 0; i < numOfPoints; i++){
     int curPointX = relativeCurCenterBlockX + points[i][0] * pointsUnitFactor;
@@ -211,13 +211,13 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
       printf("candidate block (relative) %d, %d, %d\n", curPointX, curPointY, curDiff);
       if (curDiff < best)
       {
+        best = curDiff;
         ans[0] = curPointX;
         ans[1] = curPointY;
-        best = curDiff;
+        ans[2] = curDiff;
       }
     }
   }
-
 
   if (phase == 0){
     printf("exiting phase 0...\n");
@@ -231,8 +231,7 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
   else{
     printf("SDSP");
   }
-  printf(" %d center moves to %d, %d\n\n\n\n", counter, ans[0], ans[1]);
-
+  printf(" %d center moves to %d, %d. with score %d\n\n\n\n", counter, ans[0], ans[1], ans[2]);
 
   if ((counter <= (numOfSteps - 1)) && (numOfPoints == 9 && (ans[0] != relativeCurCenterBlockX || ans[1] != relativeCurCenterBlockY))){
     ans = DSP (searchGrid, referenceBlock, width, height, numOfPoints, points, ans[0], ans[1], 1);
@@ -296,10 +295,10 @@ int *diamondSearch(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int 
   else if (phase == 1){
     printf("entering phase 1...\n\n");
 
-    LDSPans = (int *) malloc(2 * sizeof(int));
+    LDSPans = (int *) malloc(3 * sizeof(int));
     LDSPans = DSP (searchGrid, referenceBlock, width, height, LDSPnumOfPoints, LDSPpoints, relativeCurCenterBlockX, relativeCurCenterBlockY, 1);
 
-    int *SDSPans = (int *) malloc(2 * sizeof(int));
+    int *SDSPans = (int *) malloc(3 * sizeof(int));
     SDSPans = DSP (searchGrid, referenceBlock, width, height, SDSPnumOfPoints, SDSPpoints, LDSPans[0], LDSPans[1], 1);
 
     printf("Number of LSDP iterations = %d\n\n", counter - 1);
@@ -314,9 +313,13 @@ int *diamondSearch(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int 
 
 int main(int argc, char** argv)
 {
-  //here: comment code
-  // here: later handle FS and all its functions and varaibles
-  // here: handle memory and leaks
+  /*
+  // notes:
+  // comment code
+  // handle memory and leaks
+  // currently works for numOfProc = 9 or less
+  */
+
   int rank, numOfProc;
   // char version [MPI_MAX_LIBRARY_VERSION_STRING];
   MPI_Init(&argc, &argv);
@@ -424,7 +427,7 @@ int main(int argc, char** argv)
       printf("x: %d, y: %d, score: %d\n", initPossiblePointsX[i], initPossiblePointsY[i], initPossiblePointsScore[i]);
     }
 
-    // here: currently works for numOfProc = 9 or less
+
     for (int i = 1; i < numOfProc; i++){
       printf("started sending to slave %d\n", i);
       MPI_Send(referenceBlock, block_si, MPI_UINT8_T, i, 0, MPI_COMM_WORLD);
@@ -448,23 +451,39 @@ int main(int argc, char** argv)
       printf("ended sending to slave %d\n", i);
     }
 
-    // here update one case yourself [0]
+    // master trying one path itself update one case yourself [0]
     int possibleCenterX = initPossiblePointsX[0];
     int possibleCenterY = initPossiblePointsY[0];
-    int *DSans = (int *)malloc(2 * sizeof(int));
-    DSans = diamondSearch(DSsearchGrid, referenceBlock, width, height, possibleCenterX, possibleCenterY, 1);
+    int *DSansMaster = (int *)malloc(3 * sizeof(int));
+    DSansMaster = diamondSearch(DSsearchGrid, referenceBlock, width, height, possibleCenterX, possibleCenterY, 1);
 
 
-    // here receive ans from slaves
+    // selecting best results results
+    int *DSans = (int *)malloc(3 * sizeof(int)); // to store results from master and slaves
 
+    DSans[0] = DSansMaster[0]; // intially set to X of master (later will be compared with results of slaves)
+    DSans[1] = DSansMaster[1]; // intially set to Y of master (later will be compared with results of slaves)
+    DSans[2] = DSansMaster[2]; // intially set to score of master (later will be compared with results of slaves)
 
+    // to receiving results from slaves
+    for (int i = 1; i < 9; i++){
+      int *DSansSlave = (int *)malloc(3 * sizeof(int));
+      MPI_Recv(DSansSlave, 3, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      if (DSansSlave[2] < DSans[2]){
+        DSans[0] = DSansSlave[0];
+        DSans[1] = DSansSlave[1];
+        DSans[2] = DSansSlave[2];
+      }
+    }
 
-    // here compare all results and get best // amr
+    // result with best score is in DSans
 
+    // here: handle FS and all its functions and varaibles
 
+    // here metrics
+    //PSNR is just a measure for the accuracy/quality
+    // measure called EXB which is number of explored blocks
 
-
-    // here update what to highlight // compare local DSans to DSans of slaves
     int resultBlockX = min(DSsearchGridPivotCol + DSans[0], width - 1);
     int resultBlockY = min(DSsearchGridPivotRow + DSans[1], height - 1);
     highlight_block(img2, img_size, resultBlockX, resultBlockY, width, height, block_size, 2);
@@ -507,23 +526,14 @@ int main(int argc, char** argv)
     printf("im slave %d, i received the my center Y %d\n",rank, possibleCenterY);
 
 
-    int *DSans = (int *)malloc(2 * sizeof(int));
+    int *DSans = (int *)malloc(3 * sizeof(int));
     DSans = diamondSearch(DSsearchGrid, referenceBlock, width, height, possibleCenterX, possibleCenterY, 1);
 
-    //here delete this
-    for (int i = 0; i < 2 ; i++){
-      DSans[i] *= 1;
-    }
+    // sending results to master
+    MPI_Send(DSans, 3, MPI_INT, 0, 0, MPI_COMM_WORLD);
 
-
-    // here send results to master
-
-    // here metrics
-    //PSNR is just a measure for the accuracy/quality
-    // measure called EXB which is number of explored blocks i suggest we use this instead of calculating timing w nwaje3 rasna
 
     printf("slave %d done. Im free at LAST!\n",rank );
-
   }
   printf("im proc %d. im exiting\n", rank);
   MPI_Finalize();
