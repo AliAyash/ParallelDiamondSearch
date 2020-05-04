@@ -39,7 +39,7 @@ int ABS(int x,  int y)
 
 uint8_t *getimg(unsigned char *img, unsigned char *gray_img, size_t img_size, size_t gray_img_size, int width, int height)
 {
-    //function that return a 2D array of bytes where the byte at the (i,j) index represents the value of the pixel at that index
+    //function that returns a 2D array of bytes. with the byte at the (i,j) index represents the value of the pixel at that index
     //also the function will turn the image into gray scaled
     int col = 0,row = 0;
     size_t size = height * width;
@@ -61,7 +61,7 @@ void highlight_block(unsigned char *curimg, size_t img_size, int wb, int hb, int
     int col = 0, row = 0;
     for(unsigned char *p = curimg; p != curimg + img_size; p += 3)
     {
-        if ( ((col == wb || col == wb + block_sz) && row >= hb && row <= hb + block_sz ) || ((row == hb || row == hb + block_sz) && col >= wb && col <= wb + block_sz ) ){
+        if (((col == wb || col == wb + block_sz) && row >= hb && row <= hb + block_sz) || ((row == hb || row == hb + block_sz) && col >= wb && col <= wb + block_sz)){
           if (color == 1){
             *(p) = (uint8_t)((*p + *(p + 1) + *(p + 2)) /3.0);
             *(p+1) = (uint8_t)(0);
@@ -97,7 +97,7 @@ void highlight_block(unsigned char *curimg, size_t img_size, int wb, int hb, int
     {
         for (int j = 0; j < bsize; j++)
         {
-            if (brow + i >= height || bcol + j >= width ) { Block[i * bsize + j] = (uint8_t)(0); continue;}
+            if (brow + i >= height || bcol + j >= width) { Block[i * bsize + j] = (uint8_t)(0); continue;}
 
             Block[i * bsize + j] = pix[(brow + i) * width + (bcol + j)];
         }
@@ -105,7 +105,6 @@ void highlight_block(unsigned char *curimg, size_t img_size, int wb, int hb, int
     return Block;
 }
 
-// here change from sad to mde
 int evaluateBlocks(uint8_t *block1, uint8_t *block2)
 {
     int diff = 0;
@@ -113,17 +112,17 @@ int evaluateBlocks(uint8_t *block1, uint8_t *block2)
     {
         for (int j = 0; j < block_size; j++)
         {
-            diff += (int)(ABS (block1[i * block_size + j], block2[i * block_size + j]) );
+            diff += (int)(ABS (block1[i * block_size + j], block2[i * block_size + j])) * (ABS (block1[i * block_size + j], block2[i * block_size + j]));
         }
     }
-    return diff;
+    return diff / (block_size * block_size);
 }
 
 void sort(int size, int *arr, int *indicesX, int *indicesY)
 {
     for (int i = 0; i < size; i++)
     {
-        for (int j = 0; j < size - 1 ; j++)
+        for (int j = 0; j < size - 1; j++)
         {
             if (arr[j] > arr[j + 1])
             {
@@ -171,20 +170,20 @@ int *bruteforce(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int hei
 
 int counter = 0;
 
-int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, int numOfPoints, int **points, int relativeCurCenterBlockX, int relativeCurCenterBlockY, int phase){
+int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, int numOfPoints, int **points, int relativeCurCenterBlockX, int relativeCurCenterBlockY, int phase, int rank){
   size_t block_si = block_size * block_size;
   uint8_t *candidateBlock = malloc(block_si);
   int best = INT_MAX;
   int *ans;
   if (phase == 0){
-    printf(" phase 0....  current center %d, %d\n", relativeCurCenterBlockX, relativeCurCenterBlockY);
-    ans = (int *) malloc(9 * 3 * sizeof(int)); // array to store 9 x-y coordinates of blocks and the their 9 SADs
-    printf("phase 0. created array for coordinates and SADs (size 9*3)\n");
-    printf("phase 0.... method addding point to 0initial list\n");
+    printf("proc %d.... phase 0.... current center %d, %d\n", rank, relativeCurCenterBlockX, relativeCurCenterBlockY);
+    ans = (int *) malloc(9 * 3 * sizeof(int)); // array to store 9 x-y coordinates of blocks and the their 9 scores
+    printf("proc %d... phase 0. created array for coordinates and scores (size 9*3)\n", rank);
+    printf("proc %d... phase 0.... method addding points to initial list\n", rank);
   }
   else if (phase == 1){
     counter += 1;
-    printf("phase 1... ");
+    printf("proc %d... phase 1... ", rank);
     if (numOfPoints == 9){
       printf("LDSP");
     }
@@ -205,10 +204,10 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
       ans[i * 3] = curPointX;
       ans[i * 3 + 1] = curPointY;
       ans[i * 3 + 2] = curDiff;
-      printf("possible point #%d. x: %d, y: %d, score: %d\n", i, ans[i * 3], ans[i * 3 + 1], ans[i * 3 + 2]);
+      printf("proc %d... possible point #%d. x: %d, y: %d, score: %d\n", rank, i, ans[i * 3], ans[i * 3 + 1], ans[i * 3 + 2]);
     }
     else if (phase == 1){
-      printf("candidate block (relative) %d, %d, %d\n", curPointX, curPointY, curDiff);
+      printf("proc %d... candidate block (relative) %d, %d, %d\n", rank, curPointX, curPointY, curDiff);
       if (curDiff < best)
       {
         best = curDiff;
@@ -220,11 +219,11 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
   }
 
   if (phase == 0){
-    printf("exiting phase 0...\n");
+    printf("proc %d... exiting phase 0...\n", rank);
     return ans;
   }
 
-  printf("phase 1... ");
+  printf("proc %d... phase 1... ", rank);
   if (numOfPoints == 9){
       printf("LDSP");
   }
@@ -234,7 +233,7 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
   printf(" %d center moves to %d, %d. with score %d\n\n\n\n", counter, ans[0], ans[1], ans[2]);
 
   if ((counter <= (numOfSteps - 1)) && (numOfPoints == 9 && (ans[0] != relativeCurCenterBlockX || ans[1] != relativeCurCenterBlockY))){
-    ans = DSP (searchGrid, referenceBlock, width, height, numOfPoints, points, ans[0], ans[1], 1);
+    ans = DSP (searchGrid, referenceBlock, width, height, numOfPoints, points, ans[0], ans[1], 1, rank);
   }
   // ans[0] = relativeCurCenterBlockX;
   // ans[1] = relativeCurCenterBlockY;
@@ -243,7 +242,7 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
 }
 
 // calculate number of inspections and average among different cases
-int *diamondSearch(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height,int relativeCurCenterBlockX, int relativeCurCenterBlockY, int phase)
+int *diamondSearch(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height,int relativeCurCenterBlockX, int relativeCurCenterBlockY, int phase, int rank)
 {
   int LDSPnumOfPoints = 9;
 
@@ -283,28 +282,28 @@ int *diamondSearch(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int 
 
   int *LDSPans;
   if (phase == 0){
-    printf("entering phase 0...\n\n");
+    printf("proc %d... entering phase 0...\n\n", rank);
 
     LDSPans = (int *) malloc(18 * sizeof(int));
-    LDSPans = DSP (searchGrid, referenceBlock, width, height, LDSPnumOfPoints, LDSPpoints, relativeCurCenterBlockX, relativeCurCenterBlockY, 0);
+    LDSPans = DSP (searchGrid, referenceBlock, width, height, LDSPnumOfPoints, LDSPpoints, relativeCurCenterBlockX, relativeCurCenterBlockY, 0, rank);
 
-    printf("\n\ndone phase 0... im returning 18 values\n\n");
+    printf("\nproc %d... done phase 0... im returning 18 values\n\n", rank);
 
     return LDSPans;
   }
   else if (phase == 1){
-    printf("entering phase 1...\n\n");
+    printf("proc %d... entering phase 1...\n\n", rank);
 
     LDSPans = (int *) malloc(3 * sizeof(int));
-    LDSPans = DSP (searchGrid, referenceBlock, width, height, LDSPnumOfPoints, LDSPpoints, relativeCurCenterBlockX, relativeCurCenterBlockY, 1);
+    LDSPans = DSP (searchGrid, referenceBlock, width, height, LDSPnumOfPoints, LDSPpoints, relativeCurCenterBlockX, relativeCurCenterBlockY, 1, rank);
 
     int *SDSPans = (int *) malloc(3 * sizeof(int));
-    SDSPans = DSP (searchGrid, referenceBlock, width, height, SDSPnumOfPoints, SDSPpoints, LDSPans[0], LDSPans[1], 1);
+    SDSPans = DSP (searchGrid, referenceBlock, width, height, SDSPnumOfPoints, SDSPpoints, LDSPans[0], LDSPans[1], 1, rank);
 
-    printf("Number of LSDP iterations = %d\n\n", counter - 1);
+    printf("proc %d... Number of LSDP iterations = %d\n\n", rank, counter - 1);
 
-    printf("Refernce Block location %d, %d\n", DSsearchGridPivotCol + relativeCurCenterBlockX, DSsearchGridPivotRow + relativeCurCenterBlockY);
-    printf("New Block location %d, %d\n", DSsearchGridPivotCol + SDSPans[0], DSsearchGridPivotRow + SDSPans[1]);
+    printf("proc %d... Refernce Block location %d, %d\n", rank, DSsearchGridPivotCol + relativeCurCenterBlockX, DSsearchGridPivotRow + relativeCurCenterBlockY);
+    printf("proc %d... New Block location %d, %d\n", rank, DSsearchGridPivotCol + SDSPans[0], DSsearchGridPivotRow + SDSPans[1]);
 
     return SDSPans;
   }
@@ -332,10 +331,10 @@ int main(int argc, char** argv)
     printf("the MASTER is executing...\n");
   }
   else {
-    printf("hello from the other side. slave %d is executing\n", rank);
+    printf("slave %d is executing...\n", rank);
   }
 
-  printf("im proc %d, the size of world is %d\n", rank, numOfProc);
+  printf("im proc %d, the size of the world is %d\n\n\n", rank, numOfProc);
   if (rank == 0){
     unsigned char *img1 = stbi_load("frame1.jpg", &width, &height, &channels, 0);
     unsigned char *img2 = stbi_load("frame2.jpg", &width, &height, &channels, 0);
@@ -392,7 +391,7 @@ int main(int argc, char** argv)
     printf("allocated space for DS search grid. size = %d x %d x %d = %d \n", DSsearch_param, DSsearch_param, block_size * block_size, DSsearch_param * DSsearch_param * block_size * block_size);
 
     DSsearchGrid = getblock(pix2, width, height, DSsearchGridPivotCol, DSsearchGridPivotRow, block_size * DSsearch_param);
-    printf("stored DS search grid (upper left = %d x %d.) in array\n", DSsearchGridPivotCol, DSsearchGridPivotRow);
+    printf("stored DS search grid (upper left = %d x %d) in array\n", DSsearchGridPivotCol, DSsearchGridPivotRow);
 
     highlight_block(img1, img_size, DSsearchGridPivotCol, DSsearchGridPivotRow, width, height, DSsearch_param * block_size, 3);
     highlight_block(img2, img_size, DSsearchGridPivotCol, DSsearchGridPivotRow, width, height, DSsearch_param * block_size, 3);
@@ -404,13 +403,13 @@ int main(int argc, char** argv)
     // get scores for initial 9 points to distribute to slaves
     int *DSansPossiblePoints = (int *)malloc(9 * 3 * sizeof(int)); // this should be 9 intially and 2 ba3den
     printf("allocated space for initial points identifcation. starting now... \n");
-    DSansPossiblePoints = diamondSearch(DSsearchGrid, referenceBlock, width, height, relativeCurCenterBlockX, relativeCurCenterBlockY, 0);
+    DSansPossiblePoints = diamondSearch(DSsearchGrid, referenceBlock, width, height, relativeCurCenterBlockX, relativeCurCenterBlockY, 0, rank);
 
     int *initPossiblePointsX = (int *)malloc(9 * sizeof(int));
     int *initPossiblePointsY = (int *)malloc(9 * sizeof(int));
     int *initPossiblePointsScore = (int *)malloc(9 * sizeof(int));
 
-    printf("result values returned in DS ans.... storing in arrays\n");
+    printf("result values returned in initial possible points.... storing in arrays\n");
     for (int i = 0; i < 9; i++){
       initPossiblePointsX[i] = DSansPossiblePoints[i * 3];
       initPossiblePointsY[i] = DSansPossiblePoints[i * 3 + 1];
@@ -427,6 +426,7 @@ int main(int argc, char** argv)
       printf("x: %d, y: %d, score: %d\n", initPossiblePointsX[i], initPossiblePointsY[i], initPossiblePointsScore[i]);
     }
 
+    printf("\n\n");
 
     for (int i = 1; i < numOfProc; i++){
       printf("started sending to slave %d\n", i);
@@ -448,15 +448,18 @@ int main(int argc, char** argv)
       MPI_Send(&possibleCenterY, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
       printf("im master. sending to %d. sent center Y %d \n", i, possibleCenterY);
 
-      printf("ended sending to slave %d\n", i);
+      printf("ended sending to slave %d\n\n", i);
     }
 
     // master trying one path itself update one case yourself [0]
     int possibleCenterX = initPossiblePointsX[0];
     int possibleCenterY = initPossiblePointsY[0];
     int *DSansMaster = (int *)malloc(3 * sizeof(int));
-    DSansMaster = diamondSearch(DSsearchGrid, referenceBlock, width, height, possibleCenterX, possibleCenterY, 1);
+    printf("proc %d... allocated memory for local results\n", rank);
 
+    printf("proc %d... starting now (from %d, %d)... \n", rank, possibleCenterX, possibleCenterY);
+    DSansMaster = diamondSearch(DSsearchGrid, referenceBlock, width, height, possibleCenterX, possibleCenterY, 1, rank);
+    printf("proc %d... local resulted returned X:%d, Y:%d, score:%d \n", rank, DSansMaster[0], DSansMaster[1], DSansMaster[2]);
 
     // selecting best results results
     int *DSans = (int *)malloc(3 * sizeof(int)); // to store results from master and slaves
@@ -465,14 +468,20 @@ int main(int argc, char** argv)
     DSans[1] = DSansMaster[1]; // intially set to Y of master (later will be compared with results of slaves)
     DSans[2] = DSansMaster[2]; // intially set to score of master (later will be compared with results of slaves)
 
+    printf("proc %d... used master result to set intial DS results (will be updated as the master starts receiving results from slaves and comparing them to current vals) \n", rank);
+
     // to receiving results from slaves
     for (int i = 1; i < 9; i++){
       int *DSansSlave = (int *)malloc(3 * sizeof(int));
       MPI_Recv(DSansSlave, 3, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+
+      printf("master... now received results from %d. results: X: %d, Y: %d, score: %d\ncurrent best values X: %d, Y: %d, score: %d\n", i, DSansSlave[0], DSansSlave[1], DSansSlave[2], DSans[0], DSans[1], DSans[2]);
+
       if (DSansSlave[2] < DSans[2]){
         DSans[0] = DSansSlave[0];
         DSans[1] = DSansSlave[1];
         DSans[2] = DSansSlave[2];
+        printf("proc %d... is now the current best result. X: %d, Y: %d, score: %d\n", rank, DSans[0], DSans[1], DSans[2]);
       }
     }
 
@@ -491,7 +500,7 @@ int main(int argc, char** argv)
     printf("highlighted result block. upper left = %d x %d\n", resultBlockX, resultBlockY);
 
     stbi_write_jpg("frame_highlighted1.jpg", width, height, channels, img1, 100);
-    printf("printin first frame\n");
+    printf("printing first frame\n");
     stbi_write_jpg("frame_highlighted2.jpg", width, height, channels, img2, 100);
     printf("printing second frame\n");
 
@@ -527,15 +536,22 @@ int main(int argc, char** argv)
 
 
     int *DSans = (int *)malloc(3 * sizeof(int));
-    DSans = diamondSearch(DSsearchGrid, referenceBlock, width, height, possibleCenterX, possibleCenterY, 1);
+    printf("proc %d... allocated memory for local results\n", rank);
 
+    printf("proc %d... starting now (from %d, %d)... \n", rank, possibleCenterX, possibleCenterY);
+
+    DSans = diamondSearch(DSsearchGrid, referenceBlock, width, height, possibleCenterX, possibleCenterY, 1, rank);
+
+    printf("proc %d... local resulted returned X:%d, Y:%d, score:%d \n", rank, DSans[0], DSans[1], DSans[2]);
+
+    printf("proc %d... now sending local results to master\n", rank);
     // sending results to master
     MPI_Send(DSans, 3, MPI_INT, 0, 0, MPI_COMM_WORLD);
 
 
-    printf("slave %d done. Im free at LAST!\n",rank );
+    printf("slave %d done. Im free at LAST!\n",rank);
   }
-  printf("im proc %d. im exiting\n", rank);
   MPI_Finalize();
   return 0;
 }
+// sigall

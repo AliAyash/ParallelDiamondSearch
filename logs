@@ -1,0 +1,1677 @@
+slave 1 is executing...
+im proc 1, the size of the world is 9
+
+
+slave 2 is executing...
+im proc 2, the size of the world is 9
+
+
+slave 3 is executing...
+im proc 3, the size of the world is 9
+
+
+slave 5 is executing...
+im proc 5, the size of the world is 9
+
+
+slave 6 is executing...
+im proc 6, the size of the world is 9
+
+
+slave 7 is executing...
+im proc 7, the size of the world is 9
+
+
+slave 8 is executing...
+im proc 8, the size of the world is 9
+
+
+the MASTER is executing...
+im proc 0, the size of the world is 9
+
+
+slave 4 is executing...
+im proc 4, the size of the world is 9
+
+
+Loaded two image with a width of 640 px, a height of 360 px and 3 channels
+converted the two images to gray and stored in arrays
+allocated reference block size 25 x 25 = 625
+stored reference block (upper left = 600 x 50) in array
+highlighted reference block with color 2
+allocated space for DS search grid. size = 3 x 3 x 625 = 5625 
+stored DS search grid (upper left = 575 x 25) in array
+highlighted search grid in two images
+
+allocated space for initial points identifcation. starting now... 
+proc 0... entering phase 0...
+
+proc 0.... phase 0.... current center 25, 25
+proc 0... phase 0. created array for coordinates and scores (size 9*3)
+proc 0... phase 0.... method addding points to initial list
+proc 0... possible point #0. x: 25, y: 25, score: 907
+proc 0... possible point #1. x: 27, y: 25, score: 1003
+proc 0... possible point #2. x: 23, y: 25, score: 818
+proc 0... possible point #3. x: 25, y: 27, score: 855
+proc 0... possible point #4. x: 25, y: 23, score: 1167
+proc 0... possible point #5. x: 26, y: 26, score: 923
+proc 0... possible point #6. x: 24, y: 26, score: 793
+proc 0... possible point #7. x: 26, y: 24, score: 1035
+proc 0... possible point #8. x: 24, y: 24, score: 990
+proc 0... exiting phase 0...
+
+proc 0... done phase 0... im returning 18 values
+
+result values returned in initial possible points.... storing in arrays
+x: 25, y: 25, score: 907
+x: 27, y: 25, score: 1003
+x: 23, y: 25, score: 818
+x: 25, y: 27, score: 855
+x: 25, y: 23, score: 1167
+x: 26, y: 26, score: 923
+x: 24, y: 26, score: 793
+x: 26, y: 24, score: 1035
+x: 24, y: 24, score: 990
+
+
+moving to sorting stage
+now sorted ...
+x: 24, y: 26, score: 793
+x: 23, y: 25, score: 818
+x: 25, y: 27, score: 855
+x: 25, y: 25, score: 907
+x: 26, y: 26, score: 923
+x: 24, y: 24, score: 990
+x: 27, y: 25, score: 1003
+x: 26, y: 24, score: 1035
+x: 25, y: 23, score: 1167
+
+
+started sending to slave 1
+im master. sending to 1. sent referenceBlock
+im slave 1, i received the referenceBlock
+im slave 1, i received the DSsearchGrid
+im slave 1, i received the width 640
+im slave 1, i received the height 360
+im slave 1, i received the my center X 23
+im slave 1, i received the my center Y 25
+proc 1... allocated memory for local results
+proc 1... starting now (from 23, 25)... 
+proc 1... entering phase 1...
+
+im master. sending to 1. sent DSsearchGrid
+im master. sending to 1. sent width 640
+im master. sending to 1. sent height 360
+im master. sending to 1. sent center X 23 
+im master. sending to 1. sent center Y 25 
+ended sending to slave 1
+
+started sending to slave 2
+im master. sending to 2. sent referenceBlock
+proc 1... phase 1... LDSP 1 current center 23, 25
+im slave 2, i received the referenceBlock
+im slave 2, i received the DSsearchGrid
+im slave 2, i received the width 640
+im slave 2, i received the height 360
+im slave 2, i received the my center X 25
+im slave 2, i received the my center Y 27
+proc 2... allocated memory for local results
+proc 2... starting now (from 25, 27)... 
+proc 2... entering phase 1...
+
+proc 2... phase 1... LDSP 1 current center 25, 27
+proc 2... candidate block (relative) 25, 27, 855
+proc 2... candidate block (relative) 27, 27, 997
+im slave 3, i received the referenceBlock
+proc 1... candidate block (relative) 23, 25, 818
+proc 1... candidate block (relative) 25, 25, 907
+proc 1... candidate block (relative) 21, 25, 738
+proc 1... candidate block (relative) 23, 27, 708
+proc 1... candidate block (relative) 23, 23, 1159
+proc 1... candidate block (relative) 24, 26, 793
+im master. sending to 2. sent DSsearchGrid
+im master. sending to 2. sent width 640
+im master. sending to 2. sent height 360
+im master. sending to 2. sent center X 25 
+im master. sending to 2. sent center Y 27 
+ended sending to slave 2
+
+started sending to slave 3
+im master. sending to 3. sent referenceBlock
+im master. sending to 3. sent DSsearchGrid
+im master. sending to 3. sent width 640
+im master. sending to 3. sent height 360
+im master. sending to 3. sent center X 25 
+im master. sending to 3. sent center Y 25 
+ended sending to slave 3
+
+started sending to slave 4
+im master. sending to 4. sent referenceBlock
+im slave 3, i received the DSsearchGrid
+im slave 3, i received the width 640
+im slave 3, i received the height 360
+im slave 3, i received the my center X 25
+im slave 3, i received the my center Y 25
+proc 3... allocated memory for local results
+proc 3... starting now (from 25, 25)... 
+proc 3... entering phase 1...
+
+proc 3... phase 1... LDSP 1 current center 25, 25
+proc 2... candidate block (relative) 23, 27, 708
+proc 2... candidate block (relative) 25, 29, 961
+proc 2... candidate block (relative) 25, 25, 907
+proc 1... candidate block (relative) 22, 26, 667
+proc 1... candidate block (relative) 24, 24, 990
+proc 1... candidate block (relative) 22, 24, 952
+proc 1... phase 1... LDSP 1 center moves to 22, 26. with score 667
+
+
+
+proc 1... phase 1... LDSP 2 current center 22, 26
+proc 2... candidate block (relative) 26, 28, 964
+proc 2... candidate block (relative) 24, 28, 817
+im slave 4, i received the referenceBlock
+im slave 4, i received the DSsearchGrid
+proc 1... candidate block (relative) 22, 26, 667
+proc 1... candidate block (relative) 24, 26, 793
+im slave 4, i received the width 640
+im slave 4, i received the height 360
+im slave 4, i received the my center X 26
+im slave 4, i received the my center Y 26
+proc 4... allocated memory for local results
+proc 4... starting now (from 26, 26)... 
+proc 4... entering phase 1...
+
+proc 4... phase 1... LDSP 1 current center 26, 26
+im master. sending to 4. sent DSsearchGrid
+im master. sending to 4. sent width 640
+im master. sending to 4. sent height 360
+im master. sending to 4. sent center X 26 
+im master. sending to 4. sent center Y 26 
+ended sending to slave 4
+
+started sending to slave 5
+im master. sending to 5. sent referenceBlock
+proc 2... candidate block (relative) 26, 26, 923
+proc 2... candidate block (relative) 24, 26, 793
+proc 2... phase 1... LDSP 1 center moves to 23, 27. with score 708
+
+
+
+proc 2... phase 1... LDSP 2 current center 23, 27
+proc 3... candidate block (relative) 25, 25, 907
+proc 3... candidate block (relative) 27, 25, 1003
+proc 3... candidate block (relative) 23, 25, 818
+proc 1... candidate block (relative) 20, 26, 547
+proc 1... candidate block (relative) 22, 28, 670
+proc 3... candidate block (relative) 25, 27, 855
+proc 3... candidate block (relative) 25, 23, 1167
+proc 4... candidate block (relative) 26, 26, 923
+proc 4... candidate block (relative) 28, 26, 1048
+im master. sending to 5. sent DSsearchGrid
+im master. sending to 5. sent width 640
+im master. sending to 5. sent height 360
+im master. sending to 5. sent center X 24 
+im master. sending to 5. sent center Y 24 
+ended sending to slave 5
+
+started sending to slave 6
+proc 2... candidate block (relative) 23, 27, 708
+proc 2... candidate block (relative) 25, 27, 855
+proc 2... candidate block (relative) 21, 27, 560
+im slave 5, i received the referenceBlock
+im slave 5, i received the DSsearchGrid
+im slave 5, i received the width 640
+im slave 5, i received the height 360
+im slave 5, i received the my center X 24
+im slave 5, i received the my center Y 24
+proc 5... allocated memory for local results
+proc 5... starting now (from 24, 24)... 
+proc 5... entering phase 1...
+
+proc 5... phase 1... LDSP 1 current center 24, 24
+proc 1... candidate block (relative) 22, 24, 952
+proc 1... candidate block (relative) 23, 27, 708
+proc 1... candidate block (relative) 21, 27, 560
+proc 1... candidate block (relative) 23, 25, 818
+proc 3... candidate block (relative) 26, 26, 923
+proc 4... candidate block (relative) 24, 26, 793
+proc 4... candidate block (relative) 26, 28, 964
+proc 4... candidate block (relative) 26, 24, 1035
+im master. sending to 6. sent referenceBlock
+proc 2... candidate block (relative) 23, 29, 819
+proc 2... candidate block (relative) 23, 25, 818
+proc 1... candidate block (relative) 21, 25, 738
+proc 1... phase 1... LDSP 2 center moves to 20, 26. with score 547
+
+
+
+proc 1... phase 1... LDSP 3 current center 20, 26
+proc 5... candidate block (relative) 24, 24, 990
+proc 5... candidate block (relative) 26, 24, 1035
+proc 5... candidate block (relative) 22, 24, 952
+proc 2... candidate block (relative) 24, 28, 817
+proc 2... candidate block (relative) 22, 28, 670
+proc 3... candidate block (relative) 24, 26, 793
+proc 3... candidate block (relative) 26, 24, 1035
+proc 4... candidate block (relative) 27, 27, 997
+proc 4... candidate block (relative) 25, 27, 855
+im master. sending to 6. sent DSsearchGrid
+im master. sending to 6. sent width 640
+im master. sending to 6. sent height 360
+im master. sending to 6. sent center X 27 
+im master. sending to 6. sent center Y 25 
+ended sending to slave 6
+
+started sending to slave 7
+im master. sending to 7. sent referenceBlock
+im slave 6, i received the referenceBlock
+im slave 6, i received the DSsearchGrid
+im slave 6, i received the width 640
+im slave 6, i received the height 360
+im slave 6, i received the my center X 27
+im slave 6, i received the my center Y 25
+proc 6... allocated memory for local results
+proc 6... starting now (from 27, 25)... 
+proc 6... entering phase 1...
+
+proc 6... phase 1... LDSP 1 current center 27, 25
+proc 1... candidate block (relative) 20, 26, 547
+proc 1... candidate block (relative) 22, 26, 667
+proc 5... candidate block (relative) 24, 26, 793
+proc 5... candidate block (relative) 24, 22, 1341
+proc 5... candidate block (relative) 25, 25, 907
+proc 2... candidate block (relative) 24, 26, 793
+proc 2... candidate block (relative) 22, 26, 667
+proc 2... phase 1... LDSP 2 center moves to 21, 27. with score 560
+
+
+
+proc 3... candidate block (relative) 24, 24, 990
+proc 3... phase 1... LDSP 1 center moves to 24, 26. with score 793
+
+
+
+proc 3... phase 1... LDSP 2 current center 24, 26
+proc 4... candidate block (relative) 27, 25, 1003
+proc 4... candidate block (relative) 25, 25, 907
+proc 4... phase 1... LDSP 1 center moves to 24, 26. with score 793
+
+
+
+proc 4... phase 1... LDSP 2 current center 24, 26
+im slave 7, i received the referenceBlock
+proc 1... candidate block (relative) 18, 26, 438
+proc 1... candidate block (relative) 20, 28, 524
+proc 1... candidate block (relative) 20, 24, 904
+proc 6... candidate block (relative) 27, 25, 1003
+proc 6... candidate block (relative) 29, 25, 1095
+proc 6... candidate block (relative) 25, 25, 907
+proc 6... candidate block (relative) 27, 27, 997
+im slave 7, i received the DSsearchGrid
+im slave 7, i received the width 640
+im slave 7, i received the height 360
+im slave 7, i received the my center X 26
+im slave 7, i received the my center Y 24
+proc 7... allocated memory for local results
+proc 7... starting now (from 26, 24)... 
+proc 7... entering phase 1...
+
+proc 5... candidate block (relative) 23, 25, 818
+proc 5... candidate block (relative) 25, 23, 1167
+proc 5... candidate block (relative) 23, 23, 1159
+proc 5... phase 1... LDSP 1 center moves to 24, 26. with score 793
+
+
+
+proc 2... phase 1... LDSP 3 current center 21, 27
+proc 2... candidate block (relative) 21, 27, 560
+proc 2... candidate block (relative) 23, 27, 708
+proc 3... candidate block (relative) 24, 26, 793
+proc 3... candidate block (relative) 26, 26, 923
+proc 3... candidate block (relative) 22, 26, 667
+im master. sending to 7. sent DSsearchGrid
+im master. sending to 7. sent width 640
+im master. sending to 7. sent height 360
+im master. sending to 7. sent center X 26 
+im master. sending to 7. sent center Y 24 
+ended sending to slave 7
+
+started sending to slave 8
+im master. sending to 8. sent referenceBlock
+proc 4... candidate block (relative) 24, 26, 793
+proc 4... candidate block (relative) 26, 26, 923
+proc 1... candidate block (relative) 21, 27, 560
+im slave 8, i received the referenceBlock
+im slave 8, i received the DSsearchGrid
+im slave 8, i received the width 640
+im slave 8, i received the height 360
+im slave 8, i received the my center X 25
+im slave 8, i received the my center Y 23
+proc 8... allocated memory for local results
+proc 4... candidate block (relative) 22, 26, 667
+proc 4... candidate block (relative) 24, 28, 817
+proc 4... candidate block (relative) 24, 24, 990
+proc 4... candidate block (relative) 25, 27, 855
+proc 6... candidate block (relative) 27, 23, 1174
+proc 6... candidate block (relative) 28, 26, 1048
+proc 7... phase 1... LDSP 1 current center 26, 24
+proc 7... candidate block (relative) 26, 24, 1035
+proc 7... candidate block (relative) 28, 24, 1090
+proc 7... candidate block (relative) 24, 24, 990
+proc 5... phase 1... LDSP 2 current center 24, 26
+proc 5... candidate block (relative) 24, 26, 793
+proc 2... candidate block (relative) 19, 27, 420
+proc 2... candidate block (relative) 21, 29, 681
+proc 3... candidate block (relative) 24, 28, 817
+proc 3... candidate block (relative) 24, 24, 990
+im master. sending to 8. sent DSsearchGrid
+im master. sending to 8. sent width 640
+im master. sending to 8. sent height 360
+im master. sending to 8. sent center X 25 
+im master. sending to 8. sent center Y 23 
+ended sending to slave 8
+
+proc 0... allocated memory for local results
+proc 0... starting now (from 24, 26)... 
+proc 0... entering phase 1...
+
+proc 0... phase 1... LDSP 1 current center 24, 26
+proc 1... candidate block (relative) 19, 27, 420
+proc 1... candidate block (relative) 21, 25, 738
+proc 1... candidate block (relative) 19, 25, 657
+proc 1... phase 1... LDSP 3 center moves to 19, 27. with score 420
+
+
+
+proc 1... phase 1... LDSP 4 current center 19, 27
+proc 0... candidate block (relative) 24, 26, 793
+proc 0... candidate block (relative) 26, 26, 923
+proc 8... starting now (from 25, 23)... 
+proc 8... entering phase 1...
+
+proc 8... phase 1... LDSP 1 current center 25, 23
+proc 8... candidate block (relative) 25, 23, 1167
+proc 8... candidate block (relative) 27, 23, 1174
+proc 4... candidate block (relative) 23, 27, 708
+proc 4... candidate block (relative) 25, 25, 907
+proc 4... candidate block (relative) 23, 25, 818
+proc 4... phase 1... LDSP 2 center moves to 22, 26. with score 667
+
+
+
+proc 4... phase 1... LDSP 3 current center 22, 26
+proc 6... candidate block (relative) 26, 26, 923
+proc 6... candidate block (relative) 28, 24, 1090
+proc 6... candidate block (relative) 26, 24, 1035
+proc 6... phase 1... LDSP 1 center moves to 25, 25. with score 907
+
+
+
+proc 6... phase 1... LDSP 2 current center 25, 25
+proc 7... candidate block (relative) 26, 26, 923
+proc 7... candidate block (relative) 26, 22, 1327
+proc 7... candidate block (relative) 27, 25, 1003
+proc 5... candidate block (relative) 26, 26, 923
+proc 5... candidate block (relative) 22, 26, 667
+proc 5... candidate block (relative) 24, 28, 817
+proc 2... candidate block (relative) 21, 25, 738
+proc 2... candidate block (relative) 22, 28, 670
+proc 2... candidate block (relative) 20, 28, 524
+proc 3... candidate block (relative) 25, 27, 855
+proc 3... candidate block (relative) 23, 27, 708
+proc 1... candidate block (relative) 19, 27, 420
+proc 1... candidate block (relative) 21, 27, 560
+proc 3... candidate block (relative) 25, 25, 907
+proc 3... candidate block (relative) 23, 25, 818
+proc 3... phase 1... LDSP 2 center moves to 22, 26. with score 667
+
+
+
+proc 3... phase 1... LDSP 3 current center 22, 26
+proc 0... candidate block (relative) 22, 26, 667
+proc 0... candidate block (relative) 24, 28, 817
+proc 0... candidate block (relative) 24, 24, 990
+proc 8... candidate block (relative) 23, 23, 1159
+proc 8... candidate block (relative) 25, 25, 907
+proc 8... candidate block (relative) 25, 21, 1475
+proc 8... candidate block (relative) 26, 24, 1035
+proc 4... candidate block (relative) 22, 26, 667
+proc 4... candidate block (relative) 24, 26, 793
+proc 4... candidate block (relative) 20, 26, 547
+proc 6... candidate block (relative) 25, 25, 907
+proc 6... candidate block (relative) 27, 25, 1003
+proc 6... candidate block (relative) 23, 25, 818
+proc 7... candidate block (relative) 25, 25, 907
+proc 7... candidate block (relative) 27, 23, 1174
+proc 7... candidate block (relative) 25, 23, 1167
+proc 7... phase 1... LDSP 1 center moves to 25, 25. with score 907
+
+
+
+proc 7... phase 1... LDSP 2 current center 25, 25
+proc 5... candidate block (relative) 24, 24, 990
+proc 5... candidate block (relative) 25, 27, 855
+proc 5... candidate block (relative) 23, 27, 708
+proc 2... candidate block (relative) 22, 26, 667
+proc 2... candidate block (relative) 20, 26, 547
+proc 2... phase 1... LDSP 3 center moves to 19, 27. with score 420
+
+
+
+proc 2... phase 1... LDSP 4 current center 19, 27
+proc 2... candidate block (relative) 19, 27, 420
+proc 1... candidate block (relative) 17, 27, 292
+proc 1... candidate block (relative) 19, 29, 556
+proc 1... candidate block (relative) 19, 25, 657
+proc 1... candidate block (relative) 20, 28, 524
+proc 2... candidate block (relative) 21, 27, 560
+proc 2... candidate block (relative) 17, 27, 292
+proc 3... candidate block (relative) 22, 26, 667
+proc 3... candidate block (relative) 24, 26, 793
+proc 3... candidate block (relative) 20, 26, 547
+proc 0... candidate block (relative) 25, 27, 855
+proc 0... candidate block (relative) 23, 27, 708
+proc 8... candidate block (relative) 24, 24, 990
+proc 8... candidate block (relative) 26, 22, 1327
+proc 4... candidate block (relative) 22, 28, 670
+proc 4... candidate block (relative) 22, 24, 952
+proc 4... candidate block (relative) 23, 27, 708
+proc 6... candidate block (relative) 25, 27, 855
+proc 6... candidate block (relative) 25, 23, 1167
+proc 6... candidate block (relative) 26, 26, 923
+proc 7... candidate block (relative) 25, 25, 907
+proc 7... candidate block (relative) 27, 25, 1003
+proc 7... candidate block (relative) 23, 25, 818
+proc 5... candidate block (relative) 25, 25, 907
+proc 5... candidate block (relative) 23, 25, 818
+proc 5... phase 1... LDSP 2 center moves to 22, 26. with score 667
+
+
+
+proc 5... phase 1... LDSP 3 current center 22, 26
+proc 5... candidate block (relative) 22, 26, 667
+proc 1... candidate block (relative) 18, 28, 386
+proc 1... candidate block (relative) 20, 26, 547
+proc 1... candidate block (relative) 18, 26, 438
+proc 1... phase 1... LDSP 4 center moves to 17, 27. with score 292
+
+
+
+proc 1... phase 1... LDSP 5 current center 17, 27
+proc 5... candidate block (relative) 24, 26, 793
+proc 2... candidate block (relative) 19, 29, 556
+proc 2... candidate block (relative) 19, 25, 657
+proc 3... candidate block (relative) 22, 28, 670
+proc 0... candidate block (relative) 25, 25, 907
+proc 8... candidate block (relative) 24, 22, 1341
+proc 8... phase 1... LDSP 1 center moves to 25, 25. with score 907
+
+
+
+proc 8... phase 1... LDSP 2 current center 25, 25
+proc 8... candidate block (relative) 25, 25, 907
+proc 4... candidate block (relative) 21, 27, 560
+proc 4... candidate block (relative) 23, 25, 818
+proc 6... candidate block (relative) 24, 26, 793
+proc 6... candidate block (relative) 26, 24, 1035
+proc 7... candidate block (relative) 25, 27, 855
+proc 1... candidate block (relative) 17, 27, 292
+proc 5... candidate block (relative) 20, 26, 547
+proc 5... candidate block (relative) 22, 28, 670
+proc 2... candidate block (relative) 20, 28, 524
+proc 2... candidate block (relative) 18, 28, 386
+proc 3... candidate block (relative) 22, 24, 952
+proc 0... candidate block (relative) 23, 25, 818
+proc 0... phase 1... LDSP 1 center moves to 22, 26. with score 667
+
+
+
+proc 0... phase 1... LDSP 2 current center 22, 26
+proc 0... candidate block (relative) 22, 26, 667
+proc 8... candidate block (relative) 27, 25, 1003
+proc 8... candidate block (relative) 23, 25, 818
+proc 4... candidate block (relative) 21, 25, 738
+proc 4... phase 1... LDSP 3 center moves to 20, 26. with score 547
+
+
+
+proc 4... phase 1... LDSP 4 current center 20, 26
+proc 4... candidate block (relative) 20, 26, 547
+proc 6... candidate block (relative) 24, 24, 990
+proc 6... phase 1... LDSP 2 center moves to 24, 26. with score 793
+
+
+
+proc 6... phase 1... LDSP 3 current center 24, 26
+proc 7... candidate block (relative) 25, 23, 1167
+proc 7... candidate block (relative) 26, 26, 923
+proc 7... candidate block (relative) 24, 26, 793
+proc 1... candidate block (relative) 19, 27, 420
+proc 1... candidate block (relative) 15, 27, 182
+proc 1... candidate block (relative) 17, 29, 436
+proc 5... candidate block (relative) 22, 24, 952
+proc 5... candidate block (relative) 23, 27, 708
+proc 2... candidate block (relative) 20, 26, 547
+proc 2... candidate block (relative) 18, 26, 438
+proc 2... phase 1... LDSP 4 center moves to 17, 27. with score 292
+
+
+
+proc 2... phase 1... LDSP 5 current center 17, 27
+proc 3... candidate block (relative) 23, 27, 708
+proc 3... candidate block (relative) 21, 27, 560
+proc 8... candidate block (relative) 25, 27, 855
+proc 8... candidate block (relative) 25, 23, 1167
+proc 8... candidate block (relative) 26, 26, 923
+proc 4... candidate block (relative) 22, 26, 667
+proc 4... candidate block (relative) 18, 26, 438
+proc 4... candidate block (relative) 20, 28, 524
+proc 7... candidate block (relative) 26, 24, 1035
+proc 7... candidate block (relative) 24, 24, 990
+proc 7... phase 1... LDSP 2 center moves to 24, 26. with score 793
+
+
+
+proc 7... phase 1... LDSP 3 current center 24, 26
+proc 7... candidate block (relative) 24, 26, 793
+proc 6... candidate block (relative) 24, 26, 793
+proc 6... candidate block (relative) 26, 26, 923
+proc 6... candidate block (relative) 22, 26, 667
+proc 6... candidate block (relative) 24, 28, 817
+proc 6... candidate block (relative) 24, 24, 990
+proc 6... candidate block (relative) 25, 27, 855
+proc 4... candidate block (relative) 20, 24, 904
+proc 4... candidate block (relative) 21, 27, 560
+proc 4... candidate block (relative) 19, 27, 420
+proc 4... candidate block (relative) 21, 25, 738
+proc 1... candidate block (relative) 17, 25, 580
+proc 1... candidate block (relative) 18, 28, 386
+proc 1... candidate block (relative) 16, 28, 256
+proc 1... candidate block (relative) 18, 26, 438
+proc 1... candidate block (relative) 16, 26, 345
+proc 5... candidate block (relative) 21, 27, 560
+proc 5... candidate block (relative) 23, 25, 818
+proc 5... candidate block (relative) 21, 25, 738
+proc 5... phase 1... LDSP 3 center moves to 20, 26. with score 547
+
+
+
+proc 5... phase 1... LDSP 4 current center 20, 26
+proc 5... candidate block (relative) 20, 26, 547
+proc 5... candidate block (relative) 22, 26, 667
+proc 2... candidate block (relative) 17, 27, 292
+proc 2... candidate block (relative) 19, 27, 420
+proc 2... candidate block (relative) 15, 27, 182
+proc 2... candidate block (relative) 17, 29, 436
+proc 2... candidate block (relative) 17, 25, 580
+proc 0... candidate block (relative) 24, 26, 793
+proc 0... candidate block (relative) 20, 26, 547
+proc 0... candidate block (relative) 22, 28, 670
+proc 0... candidate block (relative) 22, 24, 952
+proc 0... candidate block (relative) 23, 27, 708
+proc 3... candidate block (relative) 23, 25, 818
+proc 3... candidate block (relative) 21, 25, 738
+proc 3... phase 1... LDSP 3 center moves to 20, 26. with score 547
+
+
+
+proc 3... phase 1... LDSP 4 current center 20, 26
+proc 3... candidate block (relative) 20, 26, 547
+proc 8... candidate block (relative) 24, 26, 793
+proc 8... candidate block (relative) 26, 24, 1035
+proc 8... candidate block (relative) 24, 24, 990
+proc 8... phase 1... LDSP 2 center moves to 24, 26. with score 793
+
+
+
+proc 8... phase 1... LDSP 3 current center 24, 26
+proc 8... candidate block (relative) 24, 26, 793
+proc 7... candidate block (relative) 26, 26, 923
+proc 7... candidate block (relative) 22, 26, 667
+proc 7... candidate block (relative) 24, 28, 817
+proc 8... candidate block (relative) 26, 26, 923
+proc 8... candidate block (relative) 22, 26, 667
+proc 8... candidate block (relative) 24, 28, 817
+proc 6... candidate block (relative) 23, 27, 708
+proc 6... candidate block (relative) 25, 25, 907
+proc 6... candidate block (relative) 23, 25, 818
+proc 6... phase 1... LDSP 3 center moves to 22, 26. with score 667
+
+
+
+proc 6... phase 1... LDSP 4 current center 22, 26
+proc 4... candidate block (relative) 19, 25, 657
+proc 4... phase 1... LDSP 4 center moves to 19, 27. with score 420
+
+
+
+proc 4... phase 1... LDSP 5 current center 19, 27
+proc 4... candidate block (relative) 19, 27, 420
+proc 1... phase 1... LDSP 5 center moves to 15, 27. with score 182
+
+
+
+proc 1... phase 1... LDSP 6 current center 15, 27
+proc 1... candidate block (relative) 15, 27, 182
+proc 5... candidate block (relative) 18, 26, 438
+proc 5... candidate block (relative) 20, 28, 524
+proc 5... candidate block (relative) 20, 24, 904
+proc 2... candidate block (relative) 18, 28, 386
+proc 2... candidate block (relative) 16, 28, 256
+proc 2... candidate block (relative) 18, 26, 438
+proc 0... candidate block (relative) 21, 27, 560
+proc 0... candidate block (relative) 23, 25, 818
+proc 3... candidate block (relative) 22, 26, 667
+proc 3... candidate block (relative) 18, 26, 438
+proc 7... candidate block (relative) 24, 24, 990
+proc 7... candidate block (relative) 25, 27, 855
+proc 7... candidate block (relative) 23, 27, 708
+proc 7... candidate block (relative) 25, 25, 907
+proc 3... candidate block (relative) 20, 28, 524
+proc 3... candidate block (relative) 20, 24, 904
+proc 8... candidate block (relative) 24, 24, 990
+proc 8... candidate block (relative) 25, 27, 855
+proc 6... candidate block (relative) 22, 26, 667
+proc 6... candidate block (relative) 24, 26, 793
+proc 4... candidate block (relative) 21, 27, 560
+proc 4... candidate block (relative) 17, 27, 292
+proc 1... candidate block (relative) 17, 27, 292
+proc 1... candidate block (relative) 13, 27, 102
+proc 5... candidate block (relative) 21, 27, 560
+proc 5... candidate block (relative) 19, 27, 420
+proc 2... candidate block (relative) 16, 26, 345
+proc 2... phase 1... LDSP 5 center moves to 15, 27. with score 182
+
+
+
+proc 2... phase 1... LDSP 6 current center 15, 27
+proc 0... candidate block (relative) 21, 25, 738
+proc 0... phase 1... LDSP 2 center moves to 20, 26. with score 547
+
+
+
+proc 0... phase 1... LDSP 3 current center 20, 26
+proc 0... candidate block (relative) 20, 26, 547
+proc 7... candidate block (relative) 23, 25, 818
+proc 7... phase 1... LDSP 3 center moves to 22, 26. with score 667
+
+
+
+proc 7... phase 1... LDSP 4 current center 22, 26
+proc 7... candidate block (relative) 22, 26, 667
+proc 3... candidate block (relative) 21, 27, 560
+proc 8... candidate block (relative) 23, 27, 708
+proc 8... candidate block (relative) 25, 25, 907
+proc 6... candidate block (relative) 20, 26, 547
+proc 6... candidate block (relative) 22, 28, 670
+proc 4... candidate block (relative) 19, 29, 556
+proc 4... candidate block (relative) 19, 25, 657
+proc 1... candidate block (relative) 15, 29, 324
+proc 1... candidate block (relative) 15, 25, 506
+proc 5... candidate block (relative) 21, 25, 738
+proc 2... candidate block (relative) 15, 27, 182
+proc 0... candidate block (relative) 22, 26, 667
+proc 2... candidate block (relative) 17, 27, 292
+proc 2... candidate block (relative) 13, 27, 102
+proc 7... candidate block (relative) 24, 26, 793
+proc 7... candidate block (relative) 20, 26, 547
+proc 3... candidate block (relative) 19, 27, 420
+proc 3... candidate block (relative) 21, 25, 738
+proc 8... candidate block (relative) 23, 25, 818
+proc 8... phase 1... LDSP 3 center moves to 22, 26. with score 667
+
+
+
+proc 8... phase 1... LDSP 4 current center 22, 26
+proc 8... candidate block (relative) 22, 26, 667
+proc 6... candidate block (relative) 22, 24, 952
+proc 6... candidate block (relative) 23, 27, 708
+proc 4... candidate block (relative) 20, 28, 524
+proc 4... candidate block (relative) 18, 28, 386
+proc 1... candidate block (relative) 16, 28, 256
+proc 1... candidate block (relative) 14, 28, 142
+proc 5... candidate block (relative) 19, 25, 657
+proc 5... phase 1... LDSP 4 center moves to 19, 27. with score 420
+
+
+
+proc 5... phase 1... LDSP 5 current center 19, 27
+proc 5... candidate block (relative) 19, 27, 420
+proc 0... candidate block (relative) 18, 26, 438
+proc 0... candidate block (relative) 20, 28, 524
+proc 0... candidate block (relative) 20, 24, 904
+proc 0... candidate block (relative) 21, 27, 560
+proc 5... candidate block (relative) 21, 27, 560
+proc 5... candidate block (relative) 17, 27, 292
+proc 5... candidate block (relative) 19, 29, 556
+proc 5... candidate block (relative) 19, 25, 657
+proc 2... candidate block (relative) 15, 29, 324
+proc 2... candidate block (relative) 15, 25, 506
+proc 2... candidate block (relative) 16, 28, 256
+proc 2... candidate block (relative) 14, 28, 142
+proc 2... candidate block (relative) 16, 26, 345
+proc 7... candidate block (relative) 22, 28, 670
+proc 7... candidate block (relative) 22, 24, 952
+proc 7... candidate block (relative) 23, 27, 708
+proc 7... candidate block (relative) 21, 27, 560
+proc 3... candidate block (relative) 19, 25, 657
+proc 3... phase 1... LDSP 4 center moves to 19, 27. with score 420
+
+
+
+proc 3... phase 1... LDSP 5 current center 19, 27
+proc 3... candidate block (relative) 19, 27, 420
+proc 3... candidate block (relative) 21, 27, 560
+proc 8... candidate block (relative) 24, 26, 793
+proc 8... candidate block (relative) 20, 26, 547
+proc 8... candidate block (relative) 22, 28, 670
+proc 8... candidate block (relative) 22, 24, 952
+proc 6... candidate block (relative) 21, 27, 560
+proc 6... candidate block (relative) 23, 25, 818
+proc 6... candidate block (relative) 21, 25, 738
+proc 6... phase 1... LDSP 4 center moves to 20, 26. with score 547
+
+
+
+proc 6... phase 1... LDSP 5 current center 20, 26
+proc 6... candidate block (relative) 20, 26, 547
+proc 4... candidate block (relative) 20, 26, 547
+proc 4... candidate block (relative) 18, 26, 438
+proc 4... phase 1... LDSP 5 center moves to 17, 27. with score 292
+
+
+
+proc 4... phase 1... LDSP 6 current center 17, 27
+proc 4... candidate block (relative) 17, 27, 292
+proc 4... candidate block (relative) 19, 27, 420
+proc 4... candidate block (relative) 15, 27, 182
+proc 1... candidate block (relative) 16, 26, 345
+proc 1... candidate block (relative) 14, 26, 267
+proc 1... phase 1... LDSP 6 center moves to 13, 27. with score 102
+
+
+
+proc 1... phase 1... LDSP 7 current center 13, 27
+proc 1... candidate block (relative) 13, 27, 102
+proc 1... candidate block (relative) 15, 27, 182
+proc 1... candidate block (relative) 11, 27, 64
+proc 0... candidate block (relative) 19, 27, 420
+proc 0... candidate block (relative) 21, 25, 738
+proc 1... candidate block (relative) 13, 29, 227
+proc 1... candidate block (relative) 13, 25, 442
+proc 5... candidate block (relative) 20, 28, 524
+proc 5... candidate block (relative) 18, 28, 386
+proc 5... candidate block (relative) 20, 26, 547
+proc 5... candidate block (relative) 18, 26, 438
+proc 5... phase 1... LDSP 5 center moves to 17, 27. with score 292
+
+
+
+proc 5... phase 1... LDSP 6 current center 17, 27
+proc 2... candidate block (relative) 14, 26, 267
+proc 2... phase 1... LDSP 6 center moves to 13, 27. with score 102
+
+
+
+proc 2... phase 1... LDSP 7 current center 13, 27
+proc 2... candidate block (relative) 13, 27, 102
+proc 2... candidate block (relative) 15, 27, 182
+proc 7... candidate block (relative) 23, 25, 818
+proc 7... candidate block (relative) 21, 25, 738
+proc 7... phase 1... LDSP 4 center moves to 20, 26. with score 547
+
+
+
+proc 7... phase 1... LDSP 5 current center 20, 26
+proc 7... candidate block (relative) 20, 26, 547
+proc 3... candidate block (relative) 17, 27, 292
+proc 3... candidate block (relative) 19, 29, 556
+proc 8... candidate block (relative) 23, 27, 708
+proc 8... candidate block (relative) 21, 27, 560
+proc 8... candidate block (relative) 23, 25, 818
+proc 8... candidate block (relative) 21, 25, 738
+proc 8... phase 1... LDSP 4 center moves to 20, 26. with score 547
+
+
+
+proc 8... phase 1... LDSP 5 current center 20, 26
+proc 6... candidate block (relative) 22, 26, 667
+proc 6... candidate block (relative) 18, 26, 438
+proc 6... candidate block (relative) 20, 28, 524
+proc 6... candidate block (relative) 20, 24, 904
+proc 4... candidate block (relative) 17, 29, 436
+proc 4... candidate block (relative) 17, 25, 580
+proc 4... candidate block (relative) 18, 28, 386
+proc 0... candidate block (relative) 19, 25, 657
+proc 0... phase 1... LDSP 3 center moves to 19, 27. with score 420
+
+
+
+proc 0... phase 1... LDSP 4 current center 19, 27
+proc 0... candidate block (relative) 19, 27, 420
+proc 0... candidate block (relative) 21, 27, 560
+proc 4... candidate block (relative) 16, 28, 256
+proc 4... candidate block (relative) 18, 26, 438
+proc 1... candidate block (relative) 14, 28, 142
+proc 1... candidate block (relative) 12, 28, 58
+proc 1... candidate block (relative) 14, 26, 267
+proc 1... candidate block (relative) 12, 26, 223
+proc 1... phase 1... LDSP 7 center moves to 12, 28. with score 58
+
+
+
+proc 5... candidate block (relative) 17, 27, 292
+proc 5... candidate block (relative) 19, 27, 420
+proc 5... candidate block (relative) 15, 27, 182
+proc 2... candidate block (relative) 11, 27, 64
+proc 2... candidate block (relative) 13, 29, 227
+proc 2... candidate block (relative) 13, 25, 442
+proc 7... candidate block (relative) 22, 26, 667
+proc 7... candidate block (relative) 18, 26, 438
+proc 7... candidate block (relative) 20, 28, 524
+proc 3... candidate block (relative) 19, 25, 657
+proc 3... candidate block (relative) 20, 28, 524
+proc 3... candidate block (relative) 18, 28, 386
+proc 8... candidate block (relative) 20, 26, 547
+proc 8... candidate block (relative) 22, 26, 667
+proc 8... candidate block (relative) 18, 26, 438
+proc 6... candidate block (relative) 21, 27, 560
+proc 6... candidate block (relative) 19, 27, 420
+proc 6... candidate block (relative) 21, 25, 738
+proc 0... candidate block (relative) 17, 27, 292
+proc 0... candidate block (relative) 19, 29, 556
+proc 0... candidate block (relative) 19, 25, 657
+proc 6... candidate block (relative) 19, 25, 657
+proc 6... phase 1... LDSP 5 center moves to 19, 27. with score 420
+
+
+
+proc 6... phase 1... LDSP 6 current center 19, 27
+proc 6... candidate block (relative) 19, 27, 420
+proc 4... candidate block (relative) 16, 26, 345
+proc 4... phase 1... LDSP 6 center moves to 15, 27. with score 182
+
+
+
+proc 4... phase 1... LDSP 7 current center 15, 27
+proc 4... candidate block (relative) 15, 27, 182
+proc 4... candidate block (relative) 17, 27, 292
+proc 4... candidate block (relative) 13, 27, 102
+proc 1... phase 1... LDSP 8 current center 12, 28
+proc 1... candidate block (relative) 12, 28, 58
+proc 1... candidate block (relative) 14, 28, 142
+proc 1... candidate block (relative) 10, 28, 30
+proc 5... candidate block (relative) 17, 29, 436
+proc 5... candidate block (relative) 17, 25, 580
+proc 5... candidate block (relative) 18, 28, 386
+proc 2... candidate block (relative) 14, 28, 142
+proc 2... candidate block (relative) 12, 28, 58
+proc 2... candidate block (relative) 14, 26, 267
+proc 7... candidate block (relative) 20, 24, 904
+proc 7... candidate block (relative) 21, 27, 560
+proc 7... candidate block (relative) 19, 27, 420
+proc 3... candidate block (relative) 20, 26, 547
+proc 3... candidate block (relative) 18, 26, 438
+proc 3... phase 1... LDSP 5 center moves to 17, 27. with score 292
+
+
+
+proc 3... phase 1... LDSP 6 current center 17, 27
+proc 8... candidate block (relative) 20, 28, 524
+proc 8... candidate block (relative) 20, 24, 904
+proc 8... candidate block (relative) 21, 27, 560
+proc 0... candidate block (relative) 20, 28, 524
+proc 0... candidate block (relative) 18, 28, 386
+proc 8... candidate block (relative) 19, 27, 420
+proc 8... candidate block (relative) 21, 25, 738
+proc 6... candidate block (relative) 21, 27, 560
+proc 6... candidate block (relative) 17, 27, 292
+proc 6... candidate block (relative) 19, 29, 556
+proc 4... candidate block (relative) 15, 29, 324
+proc 4... candidate block (relative) 15, 25, 506
+proc 1... candidate block (relative) 12, 30, 386
+proc 1... candidate block (relative) 12, 26, 223
+proc 5... candidate block (relative) 16, 28, 256
+proc 2... candidate block (relative) 12, 26, 223
+proc 2... phase 1... LDSP 7 center moves to 12, 28. with score 58
+
+
+
+proc 2... phase 1... LDSP 8 current center 12, 28
+proc 7... candidate block (relative) 21, 25, 738
+proc 7... candidate block (relative) 19, 25, 657
+proc 7... phase 1... LDSP 5 center moves to 19, 27. with score 420
+
+
+
+proc 7... phase 1... LDSP 6 current center 19, 27
+proc 3... candidate block (relative) 17, 27, 292
+proc 0... candidate block (relative) 20, 26, 547
+proc 0... candidate block (relative) 18, 26, 438
+proc 0... phase 1... LDSP 4 center moves to 17, 27. with score 292
+
+
+
+proc 0... phase 1... LDSP 5 current center 17, 27
+proc 3... candidate block (relative) 19, 27, 420
+proc 3... candidate block (relative) 15, 27, 182
+proc 8... candidate block (relative) 19, 25, 657
+proc 8... phase 1... LDSP 5 center moves to 19, 27. with score 420
+
+
+
+proc 8... phase 1... LDSP 6 current center 19, 27
+proc 8... candidate block (relative) 19, 27, 420
+proc 6... candidate block (relative) 19, 25, 657
+proc 6... candidate block (relative) 20, 28, 524
+proc 6... candidate block (relative) 18, 28, 386
+proc 4... candidate block (relative) 16, 28, 256
+proc 4... candidate block (relative) 14, 28, 142
+proc 1... candidate block (relative) 13, 29, 227
+proc 1... candidate block (relative) 11, 29, 161
+proc 5... candidate block (relative) 18, 26, 438
+proc 5... candidate block (relative) 16, 26, 345
+proc 5... phase 1... LDSP 6 center moves to 15, 27. with score 182
+
+
+
+proc 5... phase 1... LDSP 7 current center 15, 27
+proc 2... candidate block (relative) 12, 28, 58
+proc 2... candidate block (relative) 14, 28, 142
+proc 2... candidate block (relative) 10, 28, 30
+proc 7... candidate block (relative) 19, 27, 420
+proc 7... candidate block (relative) 21, 27, 560
+proc 0... candidate block (relative) 17, 27, 292
+proc 7... candidate block (relative) 17, 27, 292
+proc 7... candidate block (relative) 19, 29, 556
+proc 7... candidate block (relative) 19, 25, 657
+proc 7... candidate block (relative) 20, 28, 524
+proc 3... candidate block (relative) 17, 29, 436
+proc 3... candidate block (relative) 17, 25, 580
+proc 3... candidate block (relative) 18, 28, 386
+proc 8... candidate block (relative) 21, 27, 560
+proc 8... candidate block (relative) 17, 27, 292
+proc 8... candidate block (relative) 19, 29, 556
+proc 8... candidate block (relative) 19, 25, 657
+proc 8... candidate block (relative) 20, 28, 524
+proc 6... candidate block (relative) 20, 26, 547
+proc 6... candidate block (relative) 18, 26, 438
+proc 6... phase 1... LDSP 6 center moves to 17, 27. with score 292
+
+
+
+proc 6... phase 1... LDSP 7 current center 17, 27
+proc 6... candidate block (relative) 17, 27, 292
+proc 4... candidate block (relative) 16, 26, 345
+proc 4... candidate block (relative) 14, 26, 267
+proc 4... phase 1... LDSP 7 center moves to 13, 27. with score 102
+
+
+
+proc 4... phase 1... LDSP 8 current center 13, 27
+proc 4... candidate block (relative) 13, 27, 102
+proc 4... candidate block (relative) 15, 27, 182
+proc 1... candidate block (relative) 13, 27, 102
+proc 1... candidate block (relative) 11, 27, 64
+proc 1... phase 1... LDSP 8 center moves to 10, 28. with score 30
+
+
+
+proc 1... phase 1... LDSP 9 current center 10, 28
+proc 1... candidate block (relative) 10, 28, 30
+proc 1... candidate block (relative) 12, 28, 58
+proc 5... candidate block (relative) 15, 27, 182
+proc 5... candidate block (relative) 17, 27, 292
+proc 5... candidate block (relative) 13, 27, 102
+proc 5... candidate block (relative) 15, 29, 324
+proc 5... candidate block (relative) 15, 25, 506
+proc 2... candidate block (relative) 12, 30, 386
+proc 2... candidate block (relative) 12, 26, 223
+proc 2... candidate block (relative) 13, 29, 227
+proc 2... candidate block (relative) 11, 29, 161
+proc 0... candidate block (relative) 19, 27, 420
+proc 0... candidate block (relative) 15, 27, 182
+proc 0... candidate block (relative) 17, 29, 436
+proc 0... candidate block (relative) 17, 25, 580
+proc 0... candidate block (relative) 18, 28, 386
+proc 2... candidate block (relative) 13, 27, 102
+proc 2... candidate block (relative) 11, 27, 64
+proc 2... phase 1... LDSP 8 center moves to 10, 28. with score 30
+
+
+
+proc 2... phase 1... LDSP 9 current center 10, 28
+proc 7... candidate block (relative) 18, 28, 386
+proc 7... candidate block (relative) 20, 26, 547
+proc 7... candidate block (relative) 18, 26, 438
+proc 7... phase 1... LDSP 6 center moves to 17, 27. with score 292
+
+
+
+proc 7... phase 1... LDSP 7 current center 17, 27
+proc 3... candidate block (relative) 16, 28, 256
+proc 3... candidate block (relative) 18, 26, 438
+proc 8... candidate block (relative) 18, 28, 386
+proc 8... candidate block (relative) 20, 26, 547
+proc 8... candidate block (relative) 18, 26, 438
+proc 8... phase 1... LDSP 6 center moves to 17, 27. with score 292
+
+
+
+proc 8... phase 1... LDSP 7 current center 17, 27
+proc 6... candidate block (relative) 19, 27, 420
+proc 6... candidate block (relative) 15, 27, 182
+proc 6... candidate block (relative) 17, 29, 436
+proc 6... candidate block (relative) 17, 25, 580
+proc 4... candidate block (relative) 11, 27, 64
+proc 4... candidate block (relative) 13, 29, 227
+proc 4... candidate block (relative) 13, 25, 442
+proc 4... candidate block (relative) 14, 28, 142
+proc 1... candidate block (relative) 8, 28, 67
+proc 1... candidate block (relative) 10, 30, 349
+proc 1... candidate block (relative) 10, 26, 206
+proc 5... candidate block (relative) 16, 28, 256
+proc 5... candidate block (relative) 14, 28, 142
+proc 5... candidate block (relative) 16, 26, 345
+proc 0... candidate block (relative) 16, 28, 256
+proc 0... candidate block (relative) 18, 26, 438
+proc 0... candidate block (relative) 16, 26, 345
+proc 0... phase 1... LDSP 5 center moves to 15, 27. with score 182
+
+
+
+proc 0... phase 1... LDSP 6 current center 15, 27
+proc 5... candidate block (relative) 14, 26, 267
+proc 5... phase 1... LDSP 7 center moves to 13, 27. with score 102
+
+
+
+proc 5... phase 1... LDSP 8 current center 13, 27
+proc 5... candidate block (relative) 13, 27, 102
+proc 2... candidate block (relative) 10, 28, 30
+proc 2... candidate block (relative) 12, 28, 58
+proc 2... candidate block (relative) 8, 28, 67
+proc 7... candidate block (relative) 17, 27, 292
+proc 7... candidate block (relative) 19, 27, 420
+proc 7... candidate block (relative) 15, 27, 182
+proc 3... candidate block (relative) 16, 26, 345
+proc 3... phase 1... LDSP 6 center moves to 15, 27. with score 182
+
+
+
+proc 3... phase 1... LDSP 7 current center 15, 27
+proc 3... candidate block (relative) 15, 27, 182
+proc 3... candidate block (relative) 17, 27, 292
+proc 8... candidate block (relative) 17, 27, 292
+proc 8... candidate block (relative) 19, 27, 420
+proc 8... candidate block (relative) 15, 27, 182
+proc 6... candidate block (relative) 18, 28, 386
+proc 6... candidate block (relative) 16, 28, 256
+proc 6... candidate block (relative) 18, 26, 438
+proc 4... candidate block (relative) 12, 28, 58
+proc 4... candidate block (relative) 14, 26, 267
+proc 4... candidate block (relative) 12, 26, 223
+proc 4... phase 1... LDSP 8 center moves to 12, 28. with score 58
+
+
+
+proc 4... phase 1... LDSP 9 current center 12, 28
+proc 1... candidate block (relative) 11, 29, 161
+proc 1... candidate block (relative) 9, 29, 148
+proc 1... candidate block (relative) 11, 27, 64
+proc 0... candidate block (relative) 15, 27, 182
+proc 0... candidate block (relative) 17, 27, 292
+proc 0... candidate block (relative) 13, 27, 102
+proc 1... candidate block (relative) 9, 27, 75
+proc 1... phase 1... LDSP 9 center moves to 10, 28. with score 30
+
+
+
+proc 1... phase 1... SDSP 10 current center 10, 28
+proc 5... candidate block (relative) 15, 27, 182
+proc 5... candidate block (relative) 11, 27, 64
+proc 2... candidate block (relative) 10, 30, 349
+proc 2... candidate block (relative) 10, 26, 206
+proc 7... candidate block (relative) 17, 29, 436
+proc 7... candidate block (relative) 17, 25, 580
+proc 3... candidate block (relative) 13, 27, 102
+proc 3... candidate block (relative) 15, 29, 324
+proc 8... candidate block (relative) 17, 29, 436
+proc 8... candidate block (relative) 17, 25, 580
+proc 6... candidate block (relative) 16, 26, 345
+proc 6... phase 1... LDSP 7 center moves to 15, 27. with score 182
+
+
+
+proc 6... phase 1... LDSP 8 current center 15, 27
+proc 4... candidate block (relative) 12, 28, 58
+proc 4... candidate block (relative) 14, 28, 142
+proc 0... candidate block (relative) 15, 29, 324
+proc 0... candidate block (relative) 15, 25, 506
+proc 4... candidate block (relative) 10, 28, 30
+proc 4... candidate block (relative) 12, 30, 386
+proc 1... candidate block (relative) 10, 28, 30
+proc 1... candidate block (relative) 11, 28, 36
+proc 5... candidate block (relative) 13, 29, 227
+proc 5... candidate block (relative) 13, 25, 442
+proc 5... candidate block (relative) 14, 28, 142
+proc 2... candidate block (relative) 11, 29, 161
+proc 2... candidate block (relative) 9, 29, 148
+proc 2... candidate block (relative) 11, 27, 64
+proc 7... candidate block (relative) 18, 28, 386
+proc 7... candidate block (relative) 16, 28, 256
+proc 7... candidate block (relative) 18, 26, 438
+proc 3... candidate block (relative) 15, 25, 506
+proc 3... candidate block (relative) 16, 28, 256
+proc 8... candidate block (relative) 18, 28, 386
+proc 8... candidate block (relative) 16, 28, 256
+proc 8... candidate block (relative) 18, 26, 438
+proc 8... candidate block (relative) 16, 26, 345
+proc 8... phase 1... LDSP 7 center moves to 15, 27. with score 182
+
+
+
+proc 8... phase 1... LDSP 8 current center 15, 27
+proc 6... candidate block (relative) 15, 27, 182
+proc 6... candidate block (relative) 17, 27, 292
+proc 6... candidate block (relative) 13, 27, 102
+proc 0... candidate block (relative) 16, 28, 256
+proc 0... candidate block (relative) 14, 28, 142
+proc 0... candidate block (relative) 16, 26, 345
+proc 6... candidate block (relative) 15, 29, 324
+proc 6... candidate block (relative) 15, 25, 506
+proc 4... candidate block (relative) 12, 26, 223
+proc 4... candidate block (relative) 13, 29, 227
+proc 4... candidate block (relative) 11, 29, 161
+proc 1... candidate block (relative) 9, 28, 42
+proc 1... candidate block (relative) 10, 29, 147
+proc 1... candidate block (relative) 10, 27, 63
+proc 1... phase 1... SDSP 10 center moves to 10, 28. with score 30
+
+
+
+proc 1... Number of LSDP iterations = 9
+
+proc 1... Refernce Block location 598, 50
+proc 1... New Block location 585, 53
+proc 1... local resulted returned X:10, Y:28, score:30 
+proc 1... now sending local results to master
+proc 5... candidate block (relative) 12, 28, 58
+proc 5... candidate block (relative) 14, 26, 267
+proc 5... candidate block (relative) 12, 26, 223
+proc 5... phase 1... LDSP 8 center moves to 12, 28. with score 58
+
+
+
+proc 5... phase 1... LDSP 9 current center 12, 28
+proc 2... candidate block (relative) 9, 27, 75
+proc 2... phase 1... LDSP 9 center moves to 10, 28. with score 30
+
+
+
+proc 2... phase 1... SDSP 10 current center 10, 28
+proc 2... candidate block (relative) 10, 28, 30
+proc 7... candidate block (relative) 16, 26, 345
+proc 7... phase 1... LDSP 7 center moves to 15, 27. with score 182
+
+
+
+proc 7... phase 1... LDSP 8 current center 15, 27
+proc 7... candidate block (relative) 15, 27, 182
+proc 3... candidate block (relative) 14, 28, 142
+proc 3... candidate block (relative) 16, 26, 345
+proc 3... candidate block (relative) 14, 26, 267
+proc 8... candidate block (relative) 15, 27, 182
+proc 8... candidate block (relative) 17, 27, 292
+proc 8... candidate block (relative) 13, 27, 102
+proc 0... candidate block (relative) 14, 26, 267
+proc 0... phase 1... LDSP 6 center moves to 13, 27. with score 102
+
+
+
+proc 0... phase 1... LDSP 7 current center 13, 27
+proc 0... candidate block (relative) 13, 27, 102
+proc 8... candidate block (relative) 15, 29, 324
+proc 8... candidate block (relative) 15, 25, 506
+proc 8... candidate block (relative) 16, 28, 256
+proc 6... candidate block (relative) 16, 28, 256
+proc 6... candidate block (relative) 14, 28, 142
+proc 6... candidate block (relative) 16, 26, 345
+proc 4... candidate block (relative) 13, 27, 102
+proc 4... candidate block (relative) 11, 27, 64
+proc 4... phase 1... LDSP 9 center moves to 10, 28. with score 30
+
+
+
+proc 4... phase 1... LDSP 10 current center 10, 28
+slave 1 done. Im free at LAST!
+proc 5... candidate block (relative) 12, 28, 58
+proc 5... candidate block (relative) 14, 28, 142
+proc 2... candidate block (relative) 11, 28, 36
+proc 2... candidate block (relative) 9, 28, 42
+proc 2... candidate block (relative) 10, 29, 147
+proc 7... candidate block (relative) 17, 27, 292
+proc 7... candidate block (relative) 13, 27, 102
+proc 7... candidate block (relative) 15, 29, 324
+proc 3... phase 1... LDSP 7 center moves to 13, 27. with score 102
+
+
+
+proc 3... phase 1... LDSP 8 current center 13, 27
+proc 3... candidate block (relative) 13, 27, 102
+proc 0... candidate block (relative) 15, 27, 182
+proc 0... candidate block (relative) 11, 27, 64
+proc 0... candidate block (relative) 13, 29, 227
+proc 3... candidate block (relative) 15, 27, 182
+proc 8... candidate block (relative) 14, 28, 142
+proc 8... candidate block (relative) 16, 26, 345
+proc 6... candidate block (relative) 14, 26, 267
+proc 6... phase 1... LDSP 8 center moves to 13, 27. with score 102
+
+
+
+proc 6... phase 1... LDSP 9 current center 13, 27
+proc 6... candidate block (relative) 13, 27, 102
+proc 6... candidate block (relative) 15, 27, 182
+proc 4... candidate block (relative) 10, 28, 30
+proc 4... candidate block (relative) 12, 28, 58
+proc 4... candidate block (relative) 8, 28, 67
+proc 5... candidate block (relative) 10, 28, 30
+proc 5... candidate block (relative) 12, 30, 386
+proc 5... candidate block (relative) 12, 26, 223
+proc 2... candidate block (relative) 10, 27, 63
+proc 2... phase 1... SDSP 10 center moves to 10, 28. with score 30
+
+
+
+proc 2... Number of LSDP iterations = 9
+
+proc 2... Refernce Block location 600, 52
+proc 2... New Block location 585, 53
+proc 2... local resulted returned X:10, Y:28, score:30 
+proc 2... now sending local results to master
+slave 2 done. Im free at LAST!
+proc 7... candidate block (relative) 15, 25, 506
+proc 7... candidate block (relative) 16, 28, 256
+proc 7... candidate block (relative) 14, 28, 142
+proc 0... candidate block (relative) 13, 25, 442
+proc 0... candidate block (relative) 14, 28, 142
+proc 0... candidate block (relative) 12, 28, 58
+proc 7... candidate block (relative) 16, 26, 345
+proc 7... candidate block (relative) 14, 26, 267
+proc 7... phase 1... LDSP 8 center moves to 13, 27. with score 102
+
+
+
+proc 7... phase 1... LDSP 9 current center 13, 27
+proc 3... candidate block (relative) 11, 27, 64
+proc 3... candidate block (relative) 13, 29, 227
+proc 3... candidate block (relative) 13, 25, 442
+proc 8... candidate block (relative) 14, 26, 267
+proc 8... phase 1... LDSP 8 center moves to 13, 27. with score 102
+
+
+
+proc 8... phase 1... LDSP 9 current center 13, 27
+proc 8... candidate block (relative) 13, 27, 102
+proc 8... candidate block (relative) 15, 27, 182
+proc 6... candidate block (relative) 11, 27, 64
+proc 6... candidate block (relative) 13, 29, 227
+proc 6... candidate block (relative) 13, 25, 442
+proc 4... candidate block (relative) 10, 30, 349
+proc 4... candidate block (relative) 10, 26, 206
+proc 4... candidate block (relative) 11, 29, 161
+proc 5... candidate block (relative) 13, 29, 227
+proc 5... candidate block (relative) 11, 29, 161
+proc 5... candidate block (relative) 13, 27, 102
+proc 0... candidate block (relative) 14, 26, 267
+proc 0... candidate block (relative) 12, 26, 223
+proc 0... phase 1... LDSP 7 center moves to 12, 28. with score 58
+
+
+
+proc 0... phase 1... LDSP 8 current center 12, 28
+proc 0... candidate block (relative) 12, 28, 58
+proc 5... candidate block (relative) 11, 27, 64
+proc 5... phase 1... LDSP 9 center moves to 10, 28. with score 30
+
+
+
+proc 5... phase 1... LDSP 10 current center 10, 28
+proc 5... candidate block (relative) 10, 28, 30
+proc 5... candidate block (relative) 12, 28, 58
+proc 7... candidate block (relative) 13, 27, 102
+proc 7... candidate block (relative) 15, 27, 182
+proc 7... candidate block (relative) 11, 27, 64
+proc 3... candidate block (relative) 14, 28, 142
+proc 3... candidate block (relative) 12, 28, 58
+proc 8... candidate block (relative) 11, 27, 64
+proc 8... candidate block (relative) 13, 29, 227
+proc 8... candidate block (relative) 13, 25, 442
+proc 8... candidate block (relative) 14, 28, 142
+proc 6... candidate block (relative) 14, 28, 142
+proc 6... candidate block (relative) 12, 28, 58
+proc 6... candidate block (relative) 14, 26, 267
+proc 4... candidate block (relative) 9, 29, 148
+proc 4... candidate block (relative) 11, 27, 64
+proc 4... candidate block (relative) 9, 27, 75
+proc 4... phase 1... LDSP 10 center moves to 10, 28. with score 30
+
+
+
+proc 0... candidate block (relative) 14, 28, 142
+proc 0... candidate block (relative) 10, 28, 30
+proc 0... candidate block (relative) 12, 30, 386
+proc 4... phase 1... SDSP 11 current center 10, 28
+proc 4... candidate block (relative) 10, 28, 30
+proc 5... candidate block (relative) 8, 28, 67
+proc 5... candidate block (relative) 10, 30, 349
+proc 7... candidate block (relative) 13, 29, 227
+proc 7... candidate block (relative) 13, 25, 442
+proc 3... candidate block (relative) 14, 26, 267
+proc 3... candidate block (relative) 12, 26, 223
+proc 8... candidate block (relative) 12, 28, 58
+proc 8... candidate block (relative) 14, 26, 267
+proc 6... candidate block (relative) 12, 26, 223
+proc 6... phase 1... LDSP 9 center moves to 12, 28. with score 58
+
+
+
+proc 6... phase 1... LDSP 10 current center 12, 28
+proc 6... candidate block (relative) 12, 28, 58
+proc 0... candidate block (relative) 12, 26, 223
+proc 0... candidate block (relative) 13, 29, 227
+proc 6... candidate block (relative) 14, 28, 142
+proc 6... candidate block (relative) 10, 28, 30
+proc 6... candidate block (relative) 12, 30, 386
+proc 4... candidate block (relative) 11, 28, 36
+proc 4... candidate block (relative) 9, 28, 42
+proc 4... candidate block (relative) 10, 29, 147
+proc 4... candidate block (relative) 10, 27, 63
+proc 4... phase 1... SDSP 11 center moves to 10, 28. with score 30
+
+
+
+proc 5... candidate block (relative) 10, 26, 206
+proc 5... candidate block (relative) 11, 29, 161
+proc 5... candidate block (relative) 9, 29, 148
+proc 7... candidate block (relative) 14, 28, 142
+proc 7... candidate block (relative) 12, 28, 58
+proc 7... candidate block (relative) 14, 26, 267
+proc 7... candidate block (relative) 12, 26, 223
+proc 7... phase 1... LDSP 9 center moves to 12, 28. with score 58
+
+
+
+proc 3... phase 1... LDSP 8 center moves to 12, 28. with score 58
+
+
+
+proc 3... phase 1... LDSP 9 current center 12, 28
+proc 3... candidate block (relative) 12, 28, 58
+proc 3... candidate block (relative) 14, 28, 142
+proc 8... candidate block (relative) 12, 26, 223
+proc 8... phase 1... LDSP 9 center moves to 12, 28. with score 58
+
+
+
+proc 8... phase 1... LDSP 10 current center 12, 28
+proc 8... candidate block (relative) 12, 28, 58
+proc 8... candidate block (relative) 14, 28, 142
+proc 8... candidate block (relative) 10, 28, 30
+proc 0... candidate block (relative) 11, 29, 161
+proc 0... candidate block (relative) 13, 27, 102
+proc 0... candidate block (relative) 11, 27, 64
+proc 0... phase 1... LDSP 8 center moves to 10, 28. with score 30
+
+
+
+proc 0... phase 1... LDSP 9 current center 10, 28
+proc 0... candidate block (relative) 10, 28, 30
+proc 8... candidate block (relative) 12, 30, 386
+proc 8... candidate block (relative) 12, 26, 223
+proc 6... candidate block (relative) 12, 26, 223
+proc 6... candidate block (relative) 13, 29, 227
+proc 6... candidate block (relative) 11, 29, 161
+proc 4... Number of LSDP iterations = 10
+
+proc 4... Refernce Block location 601, 51
+proc 4... New Block location 585, 53
+proc 4... local resulted returned X:10, Y:28, score:30 
+proc 4... now sending local results to master
+slave 4 done. Im free at LAST!
+proc 5... candidate block (relative) 11, 27, 64
+proc 5... candidate block (relative) 9, 27, 75
+proc 5... phase 1... LDSP 10 center moves to 10, 28. with score 30
+
+
+
+proc 5... phase 1... SDSP 11 current center 10, 28
+proc 7... phase 1... LDSP 10 current center 12, 28
+proc 7... candidate block (relative) 12, 28, 58
+proc 7... candidate block (relative) 14, 28, 142
+proc 3... candidate block (relative) 10, 28, 30
+proc 3... candidate block (relative) 12, 30, 386
+proc 0... candidate block (relative) 12, 28, 58
+proc 0... candidate block (relative) 8, 28, 67
+proc 0... candidate block (relative) 10, 30, 349
+proc 3... candidate block (relative) 12, 26, 223
+proc 8... candidate block (relative) 13, 29, 227
+proc 8... candidate block (relative) 11, 29, 161
+proc 6... candidate block (relative) 13, 27, 102
+proc 6... candidate block (relative) 11, 27, 64
+proc 6... phase 1... LDSP 10 center moves to 10, 28. with score 30
+
+
+
+proc 5... candidate block (relative) 10, 28, 30
+proc 5... candidate block (relative) 11, 28, 36
+proc 7... candidate block (relative) 10, 28, 30
+proc 7... candidate block (relative) 12, 30, 386
+proc 0... candidate block (relative) 10, 26, 206
+proc 0... candidate block (relative) 11, 29, 161
+proc 7... candidate block (relative) 12, 26, 223
+proc 7... candidate block (relative) 13, 29, 227
+proc 7... candidate block (relative) 11, 29, 161
+proc 3... candidate block (relative) 13, 29, 227
+proc 3... candidate block (relative) 11, 29, 161
+proc 3... candidate block (relative) 13, 27, 102
+proc 8... candidate block (relative) 13, 27, 102
+proc 8... candidate block (relative) 11, 27, 64
+proc 8... phase 1... LDSP 10 center moves to 10, 28. with score 30
+
+
+
+proc 8... phase 1... LDSP 11 current center 10, 28
+proc 8... candidate block (relative) 10, 28, 30
+proc 6... phase 1... LDSP 11 current center 10, 28
+proc 6... candidate block (relative) 10, 28, 30
+proc 6... candidate block (relative) 12, 28, 58
+proc 5... candidate block (relative) 9, 28, 42
+proc 5... candidate block (relative) 10, 29, 147
+proc 5... candidate block (relative) 10, 27, 63
+proc 5... phase 1... SDSP 11 center moves to 10, 28. with score 30
+
+
+
+proc 5... Number of LSDP iterations = 10
+
+proc 5... Refernce Block location 599, 49
+proc 5... New Block location 585, 53
+proc 5... local resulted returned X:10, Y:28, score:30 
+proc 5... now sending local results to master
+proc 0... candidate block (relative) 9, 29, 148
+proc 0... candidate block (relative) 11, 27, 64
+proc 0... candidate block (relative) 9, 27, 75
+proc 0... phase 1... LDSP 9 center moves to 10, 28. with score 30
+
+
+
+proc 0... phase 1... SDSP 10 current center 10, 28
+slave 5 done. Im free at LAST!
+proc 7... candidate block (relative) 13, 27, 102
+proc 7... candidate block (relative) 11, 27, 64
+proc 7... phase 1... LDSP 10 center moves to 10, 28. with score 30
+
+
+
+proc 7... phase 1... LDSP 11 current center 10, 28
+proc 3... candidate block (relative) 11, 27, 64
+proc 3... phase 1... LDSP 9 center moves to 10, 28. with score 30
+
+
+
+proc 3... phase 1... LDSP 10 current center 10, 28
+proc 8... candidate block (relative) 12, 28, 58
+proc 8... candidate block (relative) 8, 28, 67
+proc 6... candidate block (relative) 8, 28, 67
+proc 6... candidate block (relative) 10, 30, 349
+proc 6... candidate block (relative) 10, 26, 206
+proc 0... candidate block (relative) 10, 28, 30
+proc 0... candidate block (relative) 11, 28, 36
+proc 6... candidate block (relative) 11, 29, 161
+proc 6... candidate block (relative) 9, 29, 148
+proc 7... candidate block (relative) 10, 28, 30
+proc 7... candidate block (relative) 12, 28, 58
+proc 7... candidate block (relative) 8, 28, 67
+proc 3... candidate block (relative) 10, 28, 30
+proc 3... candidate block (relative) 12, 28, 58
+proc 8... candidate block (relative) 10, 30, 349
+proc 8... candidate block (relative) 10, 26, 206
+proc 0... candidate block (relative) 9, 28, 42
+proc 0... candidate block (relative) 10, 29, 147
+proc 0... candidate block (relative) 10, 27, 63
+proc 0... phase 1... SDSP 10 center moves to 10, 28. with score 30
+
+
+
+proc 0... Number of LSDP iterations = 9
+
+proc 0... Refernce Block location 599, 51
+proc 0... New Block location 585, 53
+proc 0... local resulted returned X:10, Y:28, score:30 
+proc 0... used master result to set intial DS results (will be updated as the master starts receiving results from slaves and comparing them to current vals) 
+proc 8... candidate block (relative) 11, 29, 161
+proc 8... candidate block (relative) 9, 29, 148
+proc 6... candidate block (relative) 11, 27, 64
+proc 6... candidate block (relative) 9, 27, 75
+proc 6... phase 1... LDSP 11 center moves to 10, 28. with score 30
+
+
+
+proc 6... phase 1... SDSP 12 current center 10, 28
+proc 6... candidate block (relative) 10, 28, 30
+proc 7... candidate block (relative) 10, 30, 349
+proc 7... candidate block (relative) 10, 26, 206
+proc 7... candidate block (relative) 11, 29, 161
+proc 3... candidate block (relative) 8, 28, 67
+proc 3... candidate block (relative) 10, 30, 349
+master... now received results from 1. results: X: 10, Y: 28, score: 30
+current best values X: 10, Y: 28, score: 30
+master... now received results from 2. results: X: 10, Y: 28, score: 30
+current best values X: 10, Y: 28, score: 30
+proc 3... candidate block (relative) 10, 26, 206
+proc 3... candidate block (relative) 11, 29, 161
+proc 8... candidate block (relative) 11, 27, 64
+proc 8... candidate block (relative) 9, 27, 75
+proc 8... phase 1... LDSP 11 center moves to 10, 28. with score 30
+
+
+
+proc 8... phase 1... SDSP 12 current center 10, 28
+proc 6... candidate block (relative) 11, 28, 36
+proc 6... candidate block (relative) 9, 28, 42
+proc 7... candidate block (relative) 9, 29, 148
+proc 7... candidate block (relative) 11, 27, 64
+proc 3... candidate block (relative) 9, 29, 148
+proc 8... candidate block (relative) 10, 28, 30
+proc 8... candidate block (relative) 11, 28, 36
+proc 8... candidate block (relative) 9, 28, 42
+proc 6... candidate block (relative) 10, 29, 147
+proc 6... candidate block (relative) 10, 27, 63
+proc 6... phase 1... SDSP 12 center moves to 10, 28. with score 30
+
+
+
+proc 6... Number of LSDP iterations = 11
+
+proc 6... Refernce Block location 602, 50
+proc 6... New Block location 585, 53
+proc 6... local resulted returned X:10, Y:28, score:30 
+proc 6... now sending local results to master
+slave 6 done. Im free at LAST!
+proc 7... candidate block (relative) 9, 27, 75
+proc 7... phase 1... LDSP 11 center moves to 10, 28. with score 30
+
+
+
+proc 7... phase 1... SDSP 12 current center 10, 28
+proc 7... candidate block (relative) 10, 28, 30
+proc 7... candidate block (relative) 11, 28, 36
+proc 3... candidate block (relative) 11, 27, 64
+proc 8... candidate block (relative) 10, 29, 147
+proc 7... candidate block (relative) 9, 28, 42
+proc 7... candidate block (relative) 10, 29, 147
+proc 3... candidate block (relative) 9, 27, 75
+proc 3... phase 1... LDSP 10 center moves to 10, 28. with score 30
+
+
+
+proc 3... phase 1... SDSP 11 current center 10, 28
+proc 8... candidate block (relative) 10, 27, 63
+proc 8... phase 1... SDSP 12 center moves to 10, 28. with score 30
+
+
+
+proc 8... Number of LSDP iterations = 11
+
+proc 8... Refernce Block location 600, 48
+proc 8... New Block location 585, 53
+proc 8... local resulted returned X:10, Y:28, score:30 
+proc 8... now sending local results to master
+proc 3... candidate block (relative) 10, 28, 30
+proc 7... candidate block (relative) 10, 27, 63
+proc 7... phase 1... SDSP 12 center moves to 10, 28. with score 30
+
+
+
+proc 7... Number of LSDP iterations = 11
+
+proc 7... Refernce Block location 601, 49
+proc 7... New Block location 585, 53
+proc 7... local resulted returned X:10, Y:28, score:30 
+proc 7... now sending local results to master
+slave 7 done. Im free at LAST!
+slave 8 done. Im free at LAST!
+proc 3... candidate block (relative) 11, 28, 36
+proc 3... candidate block (relative) 9, 28, 42
+proc 3... candidate block (relative) 10, 29, 147
+proc 3... candidate block (relative) 10, 27, 63
+proc 3... phase 1... SDSP 11 center moves to 10, 28. with score 30
+
+
+
+proc 3... Number of LSDP iterations = 10
+
+proc 3... Refernce Block location 600, 50
+proc 3... New Block location 585, 53
+proc 3... local resulted returned X:10, Y:28, score:30 
+proc 3... now sending local results to master
+master... now received results from 3. results: X: 10, Y: 28, score: 30
+current best values X: 10, Y: 28, score: 30
+master... now received results from 4. results: X: 10, Y: 28, score: 30
+current best values X: 10, Y: 28, score: 30
+master... now received results from 5. results: X: 10, Y: 28, score: 30
+current best values X: 10, Y: 28, score: 30
+master... now received results from 6. results: X: 10, Y: 28, score: 30
+current best values X: 10, Y: 28, score: 30
+master... now received results from 7. results: X: 10, Y: 28, score: 30
+current best values X: 10, Y: 28, score: 30
+master... now received results from 8. results: X: 10, Y: 28, score: 30
+slave 3 done. Im free at LAST!
+current best values X: 10, Y: 28, score: 30
+highlighted result block. upper left = 585 x 53
+printing first frame
+printing second frame
+MASTER OUT! *drops mic*
