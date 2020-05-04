@@ -10,8 +10,8 @@
 //parameters to tune when experimenting with different blocks
 #define block_size 25
 
-#define block_h 50
-#define block_w 600
+#define block_h 25
+#define block_w 5
 // 50, 600 works well
 
 #define FSsearch_param 3
@@ -19,7 +19,7 @@
 
 #define pointsUnitFactor 1
 
-#define numOfSteps 10
+#define numOfSteps 4
 
 int min(int x, int y)
 {
@@ -344,7 +344,9 @@ int *diamondSearch(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int 
 int main(int argc, char** argv)
 {
   /*
-  // notes:
+  // to do:
+  // check check results of different blocks and images
+  // check on multiple processors
   // comment code
   // handle memory and leaks
   // currently works for numOfProc = 9 or less
@@ -407,14 +409,6 @@ int main(int argc, char** argv)
 
 
 
-
-
-
-
-
-
-
-
     uint8_t *FSsearchGrid = malloc(FSsearch_param * FSsearch_param * block_si);
     int FSsearchGridPivotColPoint = max(block_w - block_size * ((FSsearch_param - 1) / 2), 0);
     int FSsearchGridPivotRowPoint = max(block_h - block_size * ((FSsearch_param - 1) / 2), 0);
@@ -424,17 +418,6 @@ int main(int argc, char** argv)
     int *FSans = (int *)malloc(3 * sizeof(int));
     FSans = bruteforce(FSsearchGrid, referenceBlock, width, height);
     printf("brute force returned best X: %d, Y: %d, score: %d\n", FSans[0], FSans[1], FSans[2]);
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -525,7 +508,12 @@ int main(int argc, char** argv)
 
     printf("proc %d... used master result to set intial DS results (will be updated as the master starts receiving results from slaves and comparing them to current vals) \n", rank);
 
-    int slavesEXB = 0;
+    // exb for brute force and seq ds
+    int bruteForceEXB = FSsearch_param * FSsearch_param * block_size * block_size;
+    int sequentialDSEXB = localTotalEXB - bruteForceEXB; // this also means that it's for the master only
+
+
+    int maxSlavesEXB = localTotalEXB - bruteForceEXB; // intially set to master's exb;
     // to receiving results from slaves
     for (int i = 1; i < numOfProc; i++){
       int *DSansSlave = (int *)malloc(3 * sizeof(int));
@@ -543,8 +531,8 @@ int main(int argc, char** argv)
 
       int curSlaveEXB = 0;
       MPI_Recv(&curSlaveEXB, 1, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-      printf("im master... receiving from slave %d... its EXB is %d\n\n", rank, curSlaveEXB);
-      slavesEXB += curSlaveEXB;
+      printf("im master... receiving from slave %d... its EXB is %d. current max among slavesEXB: %d\n\n", rank, curSlaveEXB, maxSlavesEXB);
+      maxSlavesEXB = max (maxSlavesEXB, curSlaveEXB);
     }
 
 
@@ -562,20 +550,13 @@ int main(int argc, char** argv)
 
 
 
-
-
-
-    //metrics
-    //PSNR: measure of the accuracy/quality
     //EXB: number of explored blocks
-    int bruteForceEXB = FSsearch_param * FSsearch_param * block_size * block_size;
-    int sequentialDSEXB = localTotalEXB - bruteForceEXB; // this also means that it's for the master only
-    int parallelDSEXB = sequentialDSEXB + slavesEXB;
-
+    int parallelDSEXB = maxSlavesEXB;
     printf("\n\nfinal results: the EXB of the solutions are:\nbruteForce: %d\nsequential diamond search: %d\nparallel diamond search: %d\n\n\n", bruteForceEXB, sequentialDSEXB, parallelDSEXB);
 
 
 
+    //PSNR: measure of the accuracy/quality
     uint8_t *sequentialDSAnswer = malloc(block_si);
     sequentialDSAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, DSansMaster[0], DSansMaster[1], block_size);
     double sequentialDSPSNR = PSNR(sequentialDSAnswer, referenceBlock);
@@ -653,4 +634,4 @@ int main(int argc, char** argv)
   MPI_Finalize();
   return 0;
 }
-// soon
+// laklala

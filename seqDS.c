@@ -9,8 +9,8 @@
 //parameters to tune when experimenting with different blocks
 #define block_size 25
 
-#define block_h 50
-#define block_w 600
+#define block_h 25
+#define block_w 5
 
 // 100, 500 works well
 
@@ -328,8 +328,8 @@ int main()
 
 
     //stbi_write_jpg("frame1_sepia.jpg", width, height, gray_channels, gray_img, 100);
-    stbi_write_jpg("seq_frame_highlighted1.jpg", width, height, channels, img1, 100);
-    stbi_write_jpg("seq_frame_highlighted2.jpg", width, height, channels, img2, 100);
+    stbi_write_jpg("test1.jpg", width, height, channels, img1, 100);
+    stbi_write_jpg("test2.jpg", width, height, channels, img2, 100);
 
     return 0;
 }
