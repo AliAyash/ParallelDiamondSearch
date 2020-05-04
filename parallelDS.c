@@ -12,7 +12,6 @@
 
 #define block_h 50
 #define block_w 600
-
 // 50, 600 works well
 
 #define FSsearch_param 3
@@ -20,7 +19,7 @@
 
 #define pointsUnitFactor 1
 
-#define numOfSteps 200
+#define numOfSteps 10
 
 int min(int x, int y)
 {
@@ -142,6 +141,24 @@ void sort(int size, int *arr, int *indicesX, int *indicesY)
     }
 }
 
+int getMaxPixel(uint8_t *block)
+{
+    int mx = 0;
+    for (int i = 0; i < block_size; i++){
+        for (int j = 0; j < block_size; j++){
+            mx = max(mx, (int)(block[i * block_size + j]));
+        }
+    }
+    return mx;
+}
+
+//calculating peak to peak signal ratio
+double PSNR(uint8_t *candidateBlock, uint8_t *originalBlock){
+    int ptp = getMaxPixel(originalBlock);
+    int MSE = evaluateBlocks(candidateBlock, originalBlock);
+    double psnr = 20.0 * log10(ptp) - 10.0 * log10(MSE);
+    return psnr;
+}
 
 int *bruteforce(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height)
 {
@@ -207,7 +224,14 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
       printf("proc %d... possible point #%d. x: %d, y: %d, score: %d\n", rank, i, ans[i * 3], ans[i * 3 + 1], ans[i * 3 + 2]);
     }
     else if (phase == 1){
-      printf("proc %d... candidate block (relative) %d, %d, %d\n", rank, curPointX, curPointY, curDiff);
+      printf("proc %d... phase 1... ", rank);
+      if (numOfPoints == 9){
+        printf("LDSP");
+      }
+      else{
+        printf("SDSP");
+      }
+      printf(" %d candidate block (relative) %d, %d, %d\n", counter, curPointX, curPointY, curDiff);
       if (curDiff < best)
       {
         best = curDiff;
@@ -471,12 +495,13 @@ int main(int argc, char** argv)
     printf("proc %d... used master result to set intial DS results (will be updated as the master starts receiving results from slaves and comparing them to current vals) \n", rank);
 
     // to receiving results from slaves
-    for (int i = 1; i < 9; i++){
+    for (int i = 1; i < numOfProc; i++){
       int *DSansSlave = (int *)malloc(3 * sizeof(int));
       MPI_Recv(DSansSlave, 3, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
       printf("master... now received results from %d. results: X: %d, Y: %d, score: %d\ncurrent best values X: %d, Y: %d, score: %d\n", i, DSansSlave[0], DSansSlave[1], DSansSlave[2], DSans[0], DSans[1], DSans[2]);
 
+      // puts result with best score in DSans
       if (DSansSlave[2] < DSans[2]){
         DSans[0] = DSansSlave[0];
         DSans[1] = DSansSlave[1];
@@ -485,13 +510,42 @@ int main(int argc, char** argv)
       }
     }
 
-    // result with best score is in DSans
 
     // here: handle FS and all its functions and varaibles
 
     // here metrics
     //PSNR is just a measure for the accuracy/quality
     // measure called EXB which is number of explored blocks
+
+    uint8_t *sequentialDSAnswer = malloc(block_si);
+    sequentialDSAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, DSansMaster[0], DSansMaster[1], block_size);
+    double sequentialDSPSNR = PSNR(sequentialDSAnswer, referenceBlock);
+
+    uint8_t *parallelDSAnswer = malloc(block_si);
+    parallelDSAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, DSans[0], DSans[1], block_size);
+    double parallelDSPSNR = PSNR(parallelDSAnswer, referenceBlock);
+
+    // uint8_t *bruteForceAnswer = malloc(block_si);
+    // bruteForceAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, put FSans here realAns[1], put FSans here  realAns[0], block_size);
+    // double bruteForcePSNR = PSNR( bruteForceBlockAnswer, originalBlock);
+    double bruteForcePSNR = -999;
+
+    printf("final results the PSNRs of the solutions are:\nbruteForce: %f\nsequential diamond search: %f\nparallel diamond search: %f\n", bruteForcePSNR, sequentialDSPSNR, parallelDSPSNR);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     int resultBlockX = min(DSsearchGridPivotCol + DSans[0], width - 1);
     int resultBlockY = min(DSsearchGridPivotRow + DSans[1], height - 1);
@@ -544,8 +598,8 @@ int main(int argc, char** argv)
 
     printf("proc %d... local resulted returned X:%d, Y:%d, score:%d \n", rank, DSans[0], DSans[1], DSans[2]);
 
-    printf("proc %d... now sending local results to master\n", rank);
     // sending results to master
+    printf("proc %d... now sending local results to master\n", rank);
     MPI_Send(DSans, 3, MPI_INT, 0, 0, MPI_COMM_WORLD);
 
 
@@ -554,4 +608,4 @@ int main(int argc, char** argv)
   MPI_Finalize();
   return 0;
 }
-// sigall
+// siggggggggggggg
