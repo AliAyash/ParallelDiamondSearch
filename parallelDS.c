@@ -104,17 +104,21 @@ void highlight_block(unsigned char *curimg, size_t img_size, int wb, int hb, int
     return Block;
 }
 
+int localTotalEXB = 0;
+
+// uses MSE
 int evaluateBlocks(uint8_t *block1, uint8_t *block2)
 {
-    int diff = 0;
-    for (int i = 0; i < block_size; i++)
+  localTotalEXB += 1;
+  int diff = 0;
+  for (int i = 0; i < block_size; i++)
+  {
+    for (int j = 0; j < block_size; j++)
     {
-        for (int j = 0; j < block_size; j++)
-        {
-            diff += (int)(ABS (block1[i * block_size + j], block2[i * block_size + j])) * (ABS (block1[i * block_size + j], block2[i * block_size + j]));
-        }
+      diff += (int)(ABS (block1[i * block_size + j], block2[i * block_size + j])) * (ABS (block1[i * block_size + j], block2[i * block_size + j]));
     }
-    return diff / (block_size * block_size);
+  }
+  return diff / (block_size * block_size);
 }
 
 void sort(int size, int *arr, int *indicesX, int *indicesY)
@@ -154,8 +158,8 @@ int getMaxPixel(uint8_t *block)
 
 //calculating peak to peak signal ratio
 double PSNR(uint8_t *candidateBlock, uint8_t *originalBlock){
-    int ptp = getMaxPixel(originalBlock);
     int MSE = evaluateBlocks(candidateBlock, originalBlock);
+    int ptp = getMaxPixel(originalBlock);
     double psnr = 20.0 * log10(ptp) - 10.0 * log10(MSE);
     return psnr;
 }
@@ -165,27 +169,29 @@ int *bruteforce(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int hei
     size_t block_si = block_size * block_size;
     uint8_t *candidateBlock = malloc(block_si);
     int best = INT_MAX;
-    int *ans = (int *) malloc(2 * sizeof(int));
+    int *ans = (int *) malloc(3 * sizeof(int));
+    printf("now exexcuting brute force...\n");
     for (int i = 0; i < FSsearch_param * block_size; i++)
     {
         for (int j = 0; j < FSsearch_param * block_size; j++)
         {
-            candidateBlock = getblock(searchGrid, FSsearch_param * block_size, FSsearch_param * block_size, j, i, block_size);
+            candidateBlock = getblock(searchGrid, FSsearch_param * block_size, FSsearch_param * block_size, i, j, block_size);
             int curDiff = evaluateBlocks (candidateBlock, referenceBlock);
+            // printf("brute force is now on X: %d, Y: %d, score: %d \n", i, j, curDiff);
             if (curDiff < best)
             {
-                ans[0] = i;
-                ans[1] = j;
-                best = curDiff;
+              best = curDiff;
+              ans[0] = i;
+              ans[1] = j;
+              ans[2] = curDiff;
             }
         }
     }
-    // printf("%d %d\n", ans[0], ans[1]);
+    printf("brute force function is done. best X: %d, Y: %d, score: %d\n", ans[0], ans[1], ans[2]);
     return ans;
 }
 
-
-int counter = 0;
+int stepsCount = 0;
 
 int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, int numOfPoints, int **points, int relativeCurCenterBlockX, int relativeCurCenterBlockY, int phase, int rank){
   size_t block_si = block_size * block_size;
@@ -199,7 +205,7 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
     printf("proc %d... phase 0.... method addding points to initial list\n", rank);
   }
   else if (phase == 1){
-    counter += 1;
+    stepsCount += 1;
     printf("proc %d... phase 1... ", rank);
     if (numOfPoints == 9){
       printf("LDSP");
@@ -207,7 +213,7 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
     else{
       printf("SDSP");
     }
-    printf(" %d current center %d, %d\n", counter, relativeCurCenterBlockX, relativeCurCenterBlockY);
+    printf(" %d current center %d, %d\n", stepsCount, relativeCurCenterBlockX, relativeCurCenterBlockY);
     ans = (int *) malloc(3 * sizeof(int));
   }
   for (int i = 0; i < numOfPoints; i++){
@@ -231,7 +237,7 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
       else{
         printf("SDSP");
       }
-      printf(" %d candidate block (relative) %d, %d, %d\n", counter, curPointX, curPointY, curDiff);
+      printf(" %d candidate block (relative) %d, %d, %d\n", stepsCount, curPointX, curPointY, curDiff);
       if (curDiff < best)
       {
         best = curDiff;
@@ -254,9 +260,9 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
   else{
     printf("SDSP");
   }
-  printf(" %d center moves to %d, %d. with score %d\n\n\n\n", counter, ans[0], ans[1], ans[2]);
+  printf(" %d center moves to %d, %d. with score %d\n\n\n\n", stepsCount, ans[0], ans[1], ans[2]);
 
-  if ((counter <= (numOfSteps - 1)) && (numOfPoints == 9 && (ans[0] != relativeCurCenterBlockX || ans[1] != relativeCurCenterBlockY))){
+  if ((stepsCount <= (numOfSteps - 1)) && (numOfPoints == 9 && (ans[0] != relativeCurCenterBlockX || ans[1] != relativeCurCenterBlockY))){
     ans = DSP (searchGrid, referenceBlock, width, height, numOfPoints, points, ans[0], ans[1], 1, rank);
   }
   // ans[0] = relativeCurCenterBlockX;
@@ -319,12 +325,13 @@ int *diamondSearch(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int 
     printf("proc %d... entering phase 1...\n\n", rank);
 
     LDSPans = (int *) malloc(3 * sizeof(int));
+    printf("process %d... im inspecting this point X: %d, Y: %d\n", rank, relativeCurCenterBlockX, relativeCurCenterBlockY);
     LDSPans = DSP (searchGrid, referenceBlock, width, height, LDSPnumOfPoints, LDSPpoints, relativeCurCenterBlockX, relativeCurCenterBlockY, 1, rank);
 
     int *SDSPans = (int *) malloc(3 * sizeof(int));
     SDSPans = DSP (searchGrid, referenceBlock, width, height, SDSPnumOfPoints, SDSPpoints, LDSPans[0], LDSPans[1], 1, rank);
 
-    printf("proc %d... Number of LSDP iterations = %d\n\n", rank, counter - 1);
+    printf("proc %d... Number of LSDP iterations = %d\n\n", rank, stepsCount - 1);
 
     printf("proc %d... Refernce Block location %d, %d\n", rank, DSsearchGridPivotCol + relativeCurCenterBlockX, DSsearchGridPivotRow + relativeCurCenterBlockY);
     printf("proc %d... New Block location %d, %d\n", rank, DSsearchGridPivotCol + SDSPans[0], DSsearchGridPivotRow + SDSPans[1]);
@@ -399,13 +406,37 @@ int main(int argc, char** argv)
     printf("highlighted reference block with color 2\n");
 
 
-    // uint8_t *FSsearchGrid = malloc(FSsearch_param * FSsearch_param * block_si);
-    // int FSsearchGridPivotColPoint = max(block_w - block_size * ((FSsearch_param - 1) / 2), 0);
-    // int FSsearchGridPivotRowPoint = max(block_h - block_size * ((FSsearch_param - 1) / 2), 0);
-    // FSsearchGrid = getblock(pix2, width, height, FSsearchGridPivotColPoint, FSsearchGridPivotRowPoint, block_size * FSsearch_param);
 
-    // int *FSans = (int *)malloc(2 * sizeof(int));
-    // FSans = bruteforce(FSsearchGrid, referenceBlock, width, height);
+
+
+
+
+
+
+
+
+    uint8_t *FSsearchGrid = malloc(FSsearch_param * FSsearch_param * block_si);
+    int FSsearchGridPivotColPoint = max(block_w - block_size * ((FSsearch_param - 1) / 2), 0);
+    int FSsearchGridPivotRowPoint = max(block_h - block_size * ((FSsearch_param - 1) / 2), 0);
+    FSsearchGrid = getblock(pix2, width, height, FSsearchGridPivotColPoint, FSsearchGridPivotRowPoint, block_size * FSsearch_param);
+    printf("allocated space for FS searh grid (from X: %d, Y: %d)\n", FSsearchGridPivotColPoint, FSsearchGridPivotRowPoint);
+
+    int *FSans = (int *)malloc(3 * sizeof(int));
+    FSans = bruteforce(FSsearchGrid, referenceBlock, width, height);
+    printf("brute force returned best X: %d, Y: %d, score: %d\n", FSans[0], FSans[1], FSans[2]);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     uint8_t *DSsearchGrid = malloc(DSsearch_param * DSsearch_param * block_si);
 
@@ -494,6 +525,7 @@ int main(int argc, char** argv)
 
     printf("proc %d... used master result to set intial DS results (will be updated as the master starts receiving results from slaves and comparing them to current vals) \n", rank);
 
+    int slavesEXB = 0;
     // to receiving results from slaves
     for (int i = 1; i < numOfProc; i++){
       int *DSansSlave = (int *)malloc(3 * sizeof(int));
@@ -508,43 +540,12 @@ int main(int argc, char** argv)
         DSans[2] = DSansSlave[2];
         printf("proc %d... is now the current best result. X: %d, Y: %d, score: %d\n", rank, DSans[0], DSans[1], DSans[2]);
       }
+
+      int curSlaveEXB = 0;
+      MPI_Recv(&curSlaveEXB, 1, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      printf("im master... receiving from slave %d... its EXB is %d\n\n", rank, curSlaveEXB);
+      slavesEXB += curSlaveEXB;
     }
-
-
-    // here: handle FS and all its functions and varaibles
-
-    // here metrics
-    //PSNR is just a measure for the accuracy/quality
-    // measure called EXB which is number of explored blocks
-
-    uint8_t *sequentialDSAnswer = malloc(block_si);
-    sequentialDSAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, DSansMaster[0], DSansMaster[1], block_size);
-    double sequentialDSPSNR = PSNR(sequentialDSAnswer, referenceBlock);
-
-    uint8_t *parallelDSAnswer = malloc(block_si);
-    parallelDSAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, DSans[0], DSans[1], block_size);
-    double parallelDSPSNR = PSNR(parallelDSAnswer, referenceBlock);
-
-    // uint8_t *bruteForceAnswer = malloc(block_si);
-    // bruteForceAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, put FSans here realAns[1], put FSans here  realAns[0], block_size);
-    // double bruteForcePSNR = PSNR( bruteForceBlockAnswer, originalBlock);
-    double bruteForcePSNR = -999;
-
-    printf("final results the PSNRs of the solutions are:\nbruteForce: %f\nsequential diamond search: %f\nparallel diamond search: %f\n", bruteForcePSNR, sequentialDSPSNR, parallelDSPSNR);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     int resultBlockX = min(DSsearchGridPivotCol + DSans[0], width - 1);
@@ -557,6 +558,47 @@ int main(int argc, char** argv)
     printf("printing first frame\n");
     stbi_write_jpg("frame_highlighted2.jpg", width, height, channels, img2, 100);
     printf("printing second frame\n");
+
+
+
+
+
+
+
+    //metrics
+    //PSNR: measure of the accuracy/quality
+    //EXB: number of explored blocks
+    int bruteForceEXB = FSsearch_param * FSsearch_param * block_size * block_size;
+    int sequentialDSEXB = localTotalEXB - bruteForceEXB; // this also means that it's for the master only
+    int parallelDSEXB = sequentialDSEXB + slavesEXB;
+
+    printf("\n\nfinal results: the EXB of the solutions are:\nbruteForce: %d\nsequential diamond search: %d\nparallel diamond search: %d\n\n\n", bruteForceEXB, sequentialDSEXB, parallelDSEXB);
+
+
+
+    uint8_t *sequentialDSAnswer = malloc(block_si);
+    sequentialDSAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, DSansMaster[0], DSansMaster[1], block_size);
+    double sequentialDSPSNR = PSNR(sequentialDSAnswer, referenceBlock);
+
+    uint8_t *parallelDSAnswer = malloc(block_si);
+    parallelDSAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, DSans[0], DSans[1], block_size);
+    double parallelDSPSNR = PSNR(parallelDSAnswer, referenceBlock);
+
+    uint8_t *bruteForceAnswer = malloc(block_si);
+    bruteForceAnswer = getblock(DSsearchGrid, DSsearch_param * block_size, DSsearch_param * block_size, FSans[0], FSans[1], block_size);
+    double bruteForcePSNR = PSNR(bruteForceAnswer, referenceBlock);
+
+    printf("\n\nfinal results: the PSNRs of the solutions are:\nbruteForce: %f\nsequential diamond search: %f\nparallel diamond search: %f\n\n", bruteForcePSNR, sequentialDSPSNR, parallelDSPSNR);
+
+
+
+
+
+
+
+
+
+
 
     printf("MASTER OUT! *drops mic*\n");
   }
@@ -603,9 +645,12 @@ int main(int argc, char** argv)
     MPI_Send(DSans, 3, MPI_INT, 0, 0, MPI_COMM_WORLD);
 
 
+    MPI_Send(&localTotalEXB, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
+    printf("proc %d... sent local total EXB = %d to master \n", rank, localTotalEXB);
+
     printf("slave %d done. Im free at LAST!\n",rank);
   }
   MPI_Finalize();
   return 0;
 }
-// siggggggggggggg
+// soon
