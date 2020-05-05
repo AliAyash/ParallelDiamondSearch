@@ -6,6 +6,9 @@
 #include "stb_image_write.h"
 #include "inttypes.h"
 #include <mpi.h>
+#include <string.h>
+#include "set.h" //https://github.com/barrust/set/tree/master/src
+
 
 //parameters to tune when experimenting with different blocks
 #define block_size 25
@@ -86,7 +89,7 @@ void highlight_block(unsigned char *curimg, size_t img_size, int wb, int hb, int
 //only used with gray scaled imgs
 //make sure to check boundaries when passing parameters bcol, brow
 // takes upper left cornor and returns block as an array
-  uint8_t *getblock(uint8_t *pix, int width, int height, int bcol, int brow, int bsize)
+uint8_t *getblock(uint8_t *pix, int width, int height, int bcol, int brow, int bsize)
 {
     // int col = 0, row = 0;
     size_t size = bsize * bsize;
@@ -104,12 +107,9 @@ void highlight_block(unsigned char *curimg, size_t img_size, int wb, int hb, int
     return Block;
 }
 
-int localTotalEXB = 0;
-
 // uses MSE
 int evaluateBlocks(uint8_t *block1, uint8_t *block2)
 {
-  localTotalEXB += 1;
   int diff = 0;
   for (int i = 0; i < block_size; i++)
   {
@@ -191,7 +191,49 @@ int *bruteforce(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int hei
     return ans;
 }
 
+const char *coordinatesToString (int num1, int num2){
+  char *snum1 = malloc(50);
+  sprintf(snum1, "%d", num1);
+
+  char *snum2 = malloc(50);
+  sprintf(snum2, "%d", num2);
+
+  strcat (snum1, "#");
+  strcat (snum1, snum2);
+	printf("%s\n", snum1 );
+  return snum1;
+}
+
+// int finalEXB;
+// int *finalEXBcoordinates;
+
+// here delete this function
+/*
+void addEXBcoordinates(int *arr, int size){
+  int numOfElements = size * 2;
+  int finalEXBelements = finalEXB * 2;
+  for (int i = 0; i < numOfElements; i += 2){
+    int found = 0;
+    for (int j = 0; j < finalEXBelements; j++){
+      if (arr[i] == finalEXBcoordinates[j] && arr[i + 1] == finalEXBcoordinates[j + 1]){
+        found = 1;
+        break;
+      }
+    }
+    if (found == 0) {
+      finalEXBcoordinates[finalEXB] = arr[i];
+      finalEXBcoordinates[finalEXB + 1] = arr[i + 1];
+      finalEXB += 2;
+    }
+  }
+}
+*/
+
+
 int stepsCount = 0;
+int localTotalEXB = 0;
+int *EXBcoordinates;
+int EXPsIndex = 0;
 
 int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, int numOfPoints, int **points, int relativeCurCenterBlockX, int relativeCurCenterBlockY, int phase, int rank){
   size_t block_si = block_size * block_size;
@@ -222,6 +264,12 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
 
     candidateBlock = getblock(searchGrid, DSsearch_param * block_size, DSsearch_param * block_size, curPointX, curPointY, block_size);
     int curDiff = evaluateBlocks (candidateBlock, referenceBlock);
+
+    localTotalEXB += 1; //for explored block
+    EXBcoordinates[EXPsIndex] =  curPointX;
+    EXBcoordinates[EXPsIndex + 1] =  curPointY;
+    EXPsIndex += 2;
+
     if (phase == 0){
       // add coordinates and def to array
       ans[i * 3] = curPointX;
@@ -265,8 +313,6 @@ int *DSP (uint8_t *searchGrid, uint8_t *referenceBlock, int width, int height, i
   if ((stepsCount <= (numOfSteps - 1)) && (numOfPoints == 9 && (ans[0] != relativeCurCenterBlockX || ans[1] != relativeCurCenterBlockY))){
     ans = DSP (searchGrid, referenceBlock, width, height, numOfPoints, points, ans[0], ans[1], 1, rank);
   }
-  // ans[0] = relativeCurCenterBlockX;
-  // ans[1] = relativeCurCenterBlockY;
 
   return ans;
 }
@@ -346,10 +392,10 @@ int main(int argc, char** argv)
   /*
   // to do:
   // check check results of different blocks and images
-  // check on multiple processors
+  // check on multiple processors // currently works for numOfProc = 9 or less
   // comment code
   // handle memory and leaks
-  // currently works for numOfProc = 9 or less
+  // later: distribute processors on different levels and depths to get better exploration of possibilities and to allow more processors in the program
   */
 
   int rank, numOfProc;
@@ -357,6 +403,10 @@ int main(int argc, char** argv)
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &numOfProc);
+
+  EXBcoordinates = (int *)malloc(2 * FSsearch_param * FSsearch_param * block_size * block_size * sizeof(int)); // set to maximum possible // it wont reach exb of fs, but to be safe.
+
+  //finalEXBcoordinates = (int *)malloc(2 * FSsearch_param * FSsearch_param * block_size * block_size * sizeof(int));
 
   // variables used by master and slaves
   int width, height, channels;
@@ -510,10 +560,27 @@ int main(int argc, char** argv)
 
     // exb for brute force and seq ds
     int bruteForceEXB = FSsearch_param * FSsearch_param * block_size * block_size;
-    int sequentialDSEXB = localTotalEXB - bruteForceEXB; // this also means that it's for the master only
+    int sequentialDSEXB = localTotalEXB; // this also means that it's for the master only
+
+    bruteForceEXB = bruteForceEXB * 1;
+    sequentialDSEXB = sequentialDSEXB * 1;
 
 
-    int maxSlavesEXB = localTotalEXB - bruteForceEXB; // intially set to master's exb;
+    // int maxSlavesEXB = localTotalEXB; // intially set to master's exb;
+
+    SimpleSet set;
+    set_init(&set);
+    printf("set init\n");
+
+
+    int EXBcoordinatesElements = localTotalEXB * 2;
+    for (int i = 0; i < EXBcoordinatesElements; i += 2){ //adding the elements of the master
+      int coordianteX = EXBcoordinates[i];
+      int coordianteY = EXBcoordinates[i + 1];
+
+      set_add(&set, coordinatesToString(coordianteX, coordianteY));
+    }
+
     // to receiving results from slaves
     for (int i = 1; i < numOfProc; i++){
       int *DSansSlave = (int *)malloc(3 * sizeof(int));
@@ -531,17 +598,31 @@ int main(int argc, char** argv)
 
       int curSlaveEXB = 0;
       MPI_Recv(&curSlaveEXB, 1, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-      printf("im master... receiving from slave %d... its EXB is %d. current max among slavesEXB: %d\n\n", rank, curSlaveEXB, maxSlavesEXB);
-      maxSlavesEXB = max (maxSlavesEXB, curSlaveEXB);
+      printf("im master... receiving from slave %d... its EXB is %d.\n\n", i, curSlaveEXB);
+
+      int *curSlaveEXBcoordinates = (int *)malloc(2 * curSlaveEXB * sizeof(int));
+
+      MPI_Recv(curSlaveEXBcoordinates, curSlaveEXB * 2, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      printf("im master... receiving from slave %d... I received array of exb\n\n", i);
+
+
+      int curSlaveEXBcoordinatesElements = curSlaveEXB * 2;
+
+      for (int j = 0; j < curSlaveEXBcoordinatesElements; j += 2){ //adding the elements of the master
+        int coordianteX = curSlaveEXBcoordinates[j];
+        int coordianteY = curSlaveEXBcoordinates[j + 1];
+
+        set_add(&set, coordinatesToString(coordianteX, coordianteY));
+      }
     }
 
+    int parallelDSEXB = (int) set_length(&set);
+    set_destroy(&set);
 
     int resultBlockX = min(DSsearchGridPivotCol + DSans[0], width - 1);
     int resultBlockY = min(DSsearchGridPivotRow + DSans[1], height - 1);
     highlight_block(img2, img_size, resultBlockX, resultBlockY, width, height, block_size, 2);
-
     printf("highlighted result block. upper left = %d x %d\n", resultBlockX, resultBlockY);
-
     stbi_write_jpg("frame_highlighted1.jpg", width, height, channels, img1, 100);
     printf("printing first frame\n");
     stbi_write_jpg("frame_highlighted2.jpg", width, height, channels, img2, 100);
@@ -551,7 +632,6 @@ int main(int argc, char** argv)
 
 
     //EXB: number of explored blocks
-    int parallelDSEXB = maxSlavesEXB;
     printf("\n\nfinal results: the EXB of the solutions are:\nbruteForce: %d\nsequential diamond search: %d\nparallel diamond search: %d\n\n\n", bruteForceEXB, sequentialDSEXB, parallelDSEXB);
 
 
@@ -628,6 +708,9 @@ int main(int argc, char** argv)
 
     MPI_Send(&localTotalEXB, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
     printf("proc %d... sent local total EXB = %d to master \n", rank, localTotalEXB);
+
+    MPI_Send(EXBcoordinates, localTotalEXB * 2, MPI_INT, 0, 0, MPI_COMM_WORLD);
+    printf("proc %d... sent local EXB array to master \n", rank);
 
     printf("slave %d done. Im free at LAST!\n",rank);
   }
