@@ -500,10 +500,9 @@ int main(int argc, char *argv[]){
 
     double bruteforceEndTime = MPI_Wtime();
     bruteforceTime = bruteforceEndTime - bruteforceStartTime;
-
+    bruteforceTime *= 1000;
 
     fprintf(fp, "brute force returned best X: %d, Y: %d, score: %d\n", FSans[0], FSans[1], FSans[2]);
-
 
 
     uint8_t *DSsearchGrid = malloc(search_param * search_param * block_si);
@@ -519,6 +518,25 @@ int main(int argc, char *argv[]){
     highlight_block(img1, img_size, DSsearchGridPivotCol, DSsearchGridPivotRow, width, height, search_param * block_size, 3);
     highlight_block(img2, img_size, DSsearchGridPivotCol, DSsearchGridPivotRow, width, height, search_param * block_size, 3);
     fprintf(fp, "highlighted search grid in two images\n\n");
+
+    fprintf(fp, "\n\n");
+
+    for (int i = 1; i < numOfProc; i++){
+      fprintf(fp, "started sending to slave %d\n", i);
+      MPI_Send(referenceBlock, block_si, MPI_UINT8_T, i, 0, MPI_COMM_WORLD);
+      fprintf(fp, "im master. sending to %d. sent referenceBlock\n", i);
+      MPI_Send(DSsearchGrid, search_param * search_param * block_si, MPI_UINT8_T, i, 0, MPI_COMM_WORLD);
+      fprintf(fp, "im master. sending to %d. sent DSsearchGrid\n", i);
+
+      MPI_Send(&width, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+      fprintf(fp, "im master. sending to %d. sent width %d\n", i, width);
+      MPI_Send(&height, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
+      fprintf(fp, "im master. sending to %d. sent height %d\n", i, height);
+    }
+
+
+
+
 
     int relativeCurCenterBlockX = ((search_param - 1) / 2) * block_size; //relative to search grid
     int relativeCurCenterBlockY = ((search_param - 1) / 2) * block_size; //relative to search grid
@@ -553,18 +571,8 @@ int main(int argc, char *argv[]){
 
     fprintf(fp, "\n\n");
 
+
     for (int i = 1; i < numOfProc; i++){
-      fprintf(fp, "started sending to slave %d\n", i);
-      MPI_Send(referenceBlock, block_si, MPI_UINT8_T, i, 0, MPI_COMM_WORLD);
-      fprintf(fp, "im master. sending to %d. sent referenceBlock\n", i);
-      MPI_Send(DSsearchGrid, search_param * search_param * block_si, MPI_UINT8_T, i, 0, MPI_COMM_WORLD);
-      fprintf(fp, "im master. sending to %d. sent DSsearchGrid\n", i);
-
-      MPI_Send(&width, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
-      fprintf(fp, "im master. sending to %d. sent width %d\n", i, width);
-      MPI_Send(&height, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
-      fprintf(fp, "im master. sending to %d. sent height %d\n", i, height);
-
       //send coordinates starting to proc i from sorted array
       int possibleCenterX = initPossiblePointsX[i];
       int possibleCenterY = initPossiblePointsY[i];
@@ -590,6 +598,7 @@ int main(int argc, char *argv[]){
     DSansMaster = diamondSearch(DSsearchGrid, referenceBlock, width, height, possibleCenterX, possibleCenterY, 1, rank);
     double sequentialDSEndTime = MPI_Wtime();
     sequentialDSTime = sequentialDSEndTime - sequentialDSStartTime;
+    sequentialDSTime *= 1000;
 
 
     fprintf(fp, "proc %d... local resulted returned X:%d, Y:%d, score:%d \n", rank, DSansMaster[0], DSansMaster[1], DSansMaster[2]);
@@ -660,7 +669,7 @@ int main(int argc, char *argv[]){
     }
     double parallelDSEndTime = MPI_Wtime();
     parallelDSTime = parallelDSEndTime - parallelDSStartTime;
-
+    parallelDSTime *= 1000;
 
     int parallelDSEXB = (int) set_length(&set);
     set_destroy(&set);
@@ -700,8 +709,12 @@ int main(int argc, char *argv[]){
     printf("final results: the PSNRs of the solutions are:\nbruteForce: %f\nsequential diamond search: %f\nparallel diamond search: %f\n\n", bruteForcePSNR, sequentialDSPSNR, parallelDSPSNR);
     fprintf(fp, "\n\nfinal results: the PSNRs of the solutions are:\nbruteForce: %f\nsequential diamond search: %f\nparallel diamond search: %f\n\n", bruteForcePSNR, sequentialDSPSNR, parallelDSPSNR);
 
-    printf("final results: the time of the solutions are:\nbruteForce: %.8lf secs\nsequential diamond search: %.8lf secs\nparallel diamond search: %.8lf secs\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
-    fprintf(fp, "\n\nfinal results: the time of the solutions are:\nbruteForce: %.8lf secs\nsequential diamond search: %.8lf secs\nparallel diamond search: %.8lf secs\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
+
+    // here
+    parallelDSTime -= sequentialDSTime;
+
+    printf("final results: the time of the solutions are:\nbruteForce: %.8lf msec\nsequential diamond search: %.8lf msec\nparallel diamond search: %.8lf msec\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
+    fprintf(fp, "\n\nfinal results: the time of the solutions are:\nbruteForce: %.8lf msec\nsequential diamond search: %.8lf msec\nparallel diamond search: %.8lf msec\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
 
     fprintf(fp, "MASTER OUT! *drops mic*\n");
   }
@@ -760,4 +773,3 @@ int main(int argc, char *argv[]){
   fclose(fp);
   return 0;
 }
-// h
