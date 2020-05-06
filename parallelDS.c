@@ -413,6 +413,10 @@ int main(int argc, char *argv[]){
 
   fp = fopen("log", "w+");
 
+  double bruteforceTime;
+  double sequentialDSTime;
+  double parallelDSTime;
+
   EXBcoordinates = (int *)malloc(2 * search_param * search_param * block_size * block_size * sizeof(int)); // set to maximum possible // it wont reach exb of fs, but to be safe.
 
   // variables used by master and slaves
@@ -488,7 +492,16 @@ int main(int argc, char *argv[]){
     fprintf(fp, "allocated space for FS searh grid (from X: %d, Y: %d)\n", FSsearchGridPivotColPoint, FSsearchGridPivotRowPoint);
 
     int *FSans = (int *)malloc(3 * sizeof(int));
+
+
+    double bruteforceStartTime = MPI_Wtime();
+
     FSans = bruteforce(FSsearchGrid, referenceBlock, width, height);
+
+    double bruteforceEndTime = MPI_Wtime();
+    bruteforceTime = bruteforceEndTime - bruteforceStartTime;
+
+
     fprintf(fp, "brute force returned best X: %d, Y: %d, score: %d\n", FSans[0], FSans[1], FSans[2]);
 
 
@@ -513,6 +526,8 @@ int main(int argc, char *argv[]){
     // get scores for initial 9 points to distribute to slaves
     int *DSansPossiblePoints = (int *)malloc(9 * 3 * sizeof(int)); // this should be 9 intially and 2 ba3den
     fprintf(fp, "allocated space for initial points identifcation. starting now... \n");
+
+    double parallelDSStartTime = MPI_Wtime();
     DSansPossiblePoints = diamondSearch(DSsearchGrid, referenceBlock, width, height, relativeCurCenterBlockX, relativeCurCenterBlockY, 0, rank);
 
     int *initPossiblePointsX = (int *)malloc(9 * sizeof(int));
@@ -567,8 +582,16 @@ int main(int argc, char *argv[]){
     int *DSansMaster = (int *)malloc(3 * sizeof(int));
     fprintf(fp, "proc %d... allocated memory for local results\n", rank);
 
+
     fprintf(fp, "proc %d... starting now (from %d, %d)... \n", rank, possibleCenterX, possibleCenterY);
+
+
+    double sequentialDSStartTime = MPI_Wtime();
     DSansMaster = diamondSearch(DSsearchGrid, referenceBlock, width, height, possibleCenterX, possibleCenterY, 1, rank);
+    double sequentialDSEndTime = MPI_Wtime();
+    sequentialDSTime = sequentialDSEndTime - sequentialDSStartTime;
+
+
     fprintf(fp, "proc %d... local resulted returned X:%d, Y:%d, score:%d \n", rank, DSansMaster[0], DSansMaster[1], DSansMaster[2]);
 
     // selecting best results results
@@ -587,8 +610,6 @@ int main(int argc, char *argv[]){
     bruteForceEXB = bruteForceEXB * 1;
     sequentialDSEXB = sequentialDSEXB * 1;
 
-
-    // int maxSlavesEXB = localTotalEXB; // intially set to master's exb;
 
     SimpleSet set;
     set_init(&set);
@@ -637,6 +658,9 @@ int main(int argc, char *argv[]){
         set_add(&set, coordinatesToString(coordianteX, coordianteY));
       }
     }
+    double parallelDSEndTime = MPI_Wtime();
+    parallelDSTime = parallelDSEndTime - parallelDSStartTime;
+
 
     int parallelDSEXB = (int) set_length(&set);
     set_destroy(&set);
@@ -675,6 +699,9 @@ int main(int argc, char *argv[]){
 
     printf("final results: the PSNRs of the solutions are:\nbruteForce: %f\nsequential diamond search: %f\nparallel diamond search: %f\n\n", bruteForcePSNR, sequentialDSPSNR, parallelDSPSNR);
     fprintf(fp, "\n\nfinal results: the PSNRs of the solutions are:\nbruteForce: %f\nsequential diamond search: %f\nparallel diamond search: %f\n\n", bruteForcePSNR, sequentialDSPSNR, parallelDSPSNR);
+
+    printf("final results: the time of the solutions are:\nbruteForce: %.8lf secs\nsequential diamond search: %.8lf secs\nparallel diamond search: %.8lf secs\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
+    fprintf(fp, "\n\nfinal results: the time of the solutions are:\nbruteForce: %.8lf secs\nsequential diamond search: %.8lf secs\nparallel diamond search: %.8lf secs\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
 
     fprintf(fp, "MASTER OUT! *drops mic*\n");
   }
