@@ -1,0 +1,17 @@
+mpi program
+
+note: all files of this folder should be in the same directory of runned program
+
+compile:
+mpicc -o parallelDS parallelDS.c set.o -lm 
+
+run:
+jobsub mpi parallelDS <numOfProccessors> <frame1 name> <frame2 name> <X coordinate> <Y coordinate>
+
+example of running:
+jobsub mpi parallelDS 4 frame1.jpg frame2.jpg 20 50
+
+note:
+<X coordinate? is the X coordinate of upper left pixel of the reference block
+
+<Y coordinate> is the Y coordinate of upper left pixel of the reference block

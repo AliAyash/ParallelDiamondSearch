@@ -9,10 +9,6 @@
 #include <string.h>
 #include "set.h" //https://github.com/barrust/set/tree/master/src
 
-
-//#define block_h 25
-//#define block_w 5
-// 50, 600 works well
 int block_h = 0;
 int block_w = 0;
 
@@ -20,7 +16,7 @@ int block_w = 0;
 #define block_size 16
 #define search_param 3
 #define pointsUnitFactor 1
-#define numOfSteps 10
+#define numOfSteps 20
 
 FILE *fp;
 
@@ -201,32 +197,8 @@ const char *coordinatesToString (int num1, int num2){
 
   strcat (snum1, "#");
   strcat (snum1, snum2);
-	// fprintf(fp, "%s\n", snum1 );
   return snum1;
 }
-
-/*
-// int finalEXB;
-// int *finalEXBcoordinates;
-void addEXBcoordinates(int *arr, int size){
-  int numOfElements = size * 2;
-  int finalEXBelements = finalEXB * 2;
-  for (int i = 0; i < numOfElements; i += 2){
-    int found = 0;
-    for (int j = 0; j < finalEXBelements; j++){
-      if (arr[i] == finalEXBcoordinates[j] && arr[i + 1] == finalEXBcoordinates[j + 1]){
-        found = 1;
-        break;
-      }
-    }
-    if (found == 0) {
-      finalEXBcoordinates[finalEXB] = arr[i];
-      finalEXBcoordinates[finalEXB + 1] = arr[i + 1];
-      finalEXB += 2;
-    }
-  }
-}
-*/
 
 int stepsCount = 0;
 int localTotalEXB = 0;
@@ -386,30 +358,18 @@ int *diamondSearch(uint8_t *searchGrid, uint8_t *referenceBlock, int width, int 
 }
 
 int main(int argc, char *argv[]){
-  /*
-  // to do:
-  // check results of different blocks and images
-  // check on multiple processors // currently works for numOfProc = 9 or less
-  // comment code
-  // handle memory and leaks
-
-  // later: distribute processors on different levels and depths to get better exploration of possibilities and to allow more processors in the program
-  // load balancing
-  // automate testing. create compile and take program that takes the parameters and runs jobsub
-  // create log for every core
-  */
-
   int rank, numOfProc;
   // char version [MPI_MAX_LIBRARY_VERSION_STRING];
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &numOfProc);
 
-  block_h = atoi(argv[3]);
-  block_w = atoi(argv[4]);
-
   char *frame1 = argv[1];
   char *frame2 = argv[2];
+
+  block_w = atoi(argv[3]);
+  block_h = atoi(argv[4]);
+
 
   fp = fopen("log", "w+");
 
@@ -463,7 +423,6 @@ int main(int argc, char *argv[]){
     unsigned char *gray_img1 = malloc(gray_img_size);
     unsigned char *gray_img2 = malloc(gray_img_size);
 
-    //image size 640x360
     uint8_t *pix1 = malloc(gray_img_size);
     uint8_t *pix2 = malloc(gray_img_size);
 
@@ -533,8 +492,6 @@ int main(int argc, char *argv[]){
       MPI_Send(&height, 1, MPI_INT, i, 0, MPI_COMM_WORLD);
       fprintf(fp, "im master. sending to %d. sent height %d\n", i, height);
     }
-
-
 
 
 
@@ -612,13 +569,6 @@ int main(int argc, char *argv[]){
 
     fprintf(fp, "proc %d... used master result to set intial DS results (will be updated as the master starts receiving results from slaves and comparing them to current vals) \n", rank);
 
-    // exb for brute force and seq ds
-    int bruteForceEXB = search_param * search_param * block_size * block_size;
-    int sequentialDSEXB = localTotalEXB; // this also means that it's for the master only
-
-    bruteForceEXB = bruteForceEXB * 1;
-    sequentialDSEXB = sequentialDSEXB * 1;
-
 
     SimpleSet set;
     set_init(&set);
@@ -632,6 +582,15 @@ int main(int argc, char *argv[]){
 
       set_add(&set, coordinatesToString(coordianteX, coordianteY));
     }
+
+    // exb for brute force and seq ds
+    int bruteForceEXB = search_param * search_param * block_size * block_size;
+    int sequentialDSEXB = localTotalEXB; // this sequesequentialDSEXBntialDSEXBalso means that it's for the master only
+
+    bruteForceEXB = bruteForceEXB * 1;
+    sequentialDSEXB = sequentialDSEXB * 1;
+
+    // sequentialDSEXB = (int) set_length(&set);
 
     // to receiving results from slaves
     for (int i = 1; i < numOfProc; i++){
@@ -710,17 +669,13 @@ int main(int argc, char *argv[]){
     fprintf(fp, "\n\nfinal results: the PSNRs of the solutions are:\nbruteForce: %f\nsequential diamond search: %f\nparallel diamond search: %f\n\n", bruteForcePSNR, sequentialDSPSNR, parallelDSPSNR);
 
 
-    // here
-    parallelDSTime -= sequentialDSTime;
-
-    printf("final results: the time of the solutions are:\nbruteForce: %.8lf msec\nsequential diamond search: %.8lf msec\nparallel diamond search: %.8lf msec\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
-    fprintf(fp, "\n\nfinal results: the time of the solutions are:\nbruteForce: %.8lf msec\nsequential diamond search: %.8lf msec\nparallel diamond search: %.8lf msec\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
+    // printf("final results: the time of the solutions are:\nbruteForce: %.8lf msec\nsequential diamond search: %.8lf msec\nparallel diamond search: %.8lf msec\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
+    // fprintf(fp, "\n\nfinal results: the time of the solutions are:\nbruteForce: %.8lf msec\nsequential diamond search: %.8lf msec\nparallel diamond search: %.8lf msec\n\n", bruteforceTime, sequentialDSTime, parallelDSTime);
 
     fprintf(fp, "MASTER OUT! *drops mic*\n");
   }
   //slaves
   else if (rank != 0) {
-    // do this for all the different points
     size_t block_si = block_size * block_size;
 
     uint8_t *referenceBlock = malloc(block_si);
